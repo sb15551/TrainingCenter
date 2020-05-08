@@ -1,4 +1,4 @@
-package view;
+package com.jp.trc.testing.view;
 
 import java.util.List;
 

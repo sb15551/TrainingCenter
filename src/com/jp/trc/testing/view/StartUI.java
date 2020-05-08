@@ -1,7 +1,7 @@
-package view;
+package com.jp.trc.testing.view;
 
-import model.TrainingCenter;
-import model.users.User;
+import com.jp.trc.testing.model.TrainingCenter;
+import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
 import java.util.List;

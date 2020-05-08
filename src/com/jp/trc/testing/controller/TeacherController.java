@@ -1,10 +1,10 @@
-package controller;
+package com.jp.trc.testing.controller;
 
-import model.TrainingCenter;
-import model.testing.Subscription;
-import model.testing.Testing;
-import model.users.User;
-import view.Input;
+import com.jp.trc.testing.model.TrainingCenter;
+import com.jp.trc.testing.model.testing.Subscription;
+import com.jp.trc.testing.model.testing.Testing;
+import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.Input;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package model.users;
+package com.jp.trc.testing.model.users;
 
 import java.util.Objects;
 

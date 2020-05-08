@@ -1,11 +1,14 @@
-package model;
+package com.jp.trc.testing.model;
 
-import model.testing.Subscription;
-import model.testing.Testing;
-import model.users.Teacher;
-import model.users.User;
+import com.jp.trc.testing.model.testing.Subscription;
+import com.jp.trc.testing.model.testing.Testing;
+import com.jp.trc.testing.model.users.Teacher;
+import com.jp.trc.testing.model.users.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TrainingCenter {
     private Map<String, User> users;

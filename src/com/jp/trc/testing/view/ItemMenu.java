@@ -1,6 +1,6 @@
-package view;
+package com.jp.trc.testing.view;
 
-import controller.UserAction;
+import com.jp.trc.testing.controller.UserAction;
 
 public class ItemMenu {
     private String item;

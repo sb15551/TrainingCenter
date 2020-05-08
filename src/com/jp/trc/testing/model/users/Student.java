@@ -1,4 +1,4 @@
-package model.users;
+package com.jp.trc.testing.model.users;
 
 public class Student extends User {
     public Student(int id, String name, String login, String password, int age) {

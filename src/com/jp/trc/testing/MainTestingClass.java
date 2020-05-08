@@ -1,11 +1,13 @@
-import model.TrainingCenter;
-import model.testing.Question;
-import model.testing.Subscription;
-import model.testing.Testing;
-import model.users.Admin;
-import model.users.Student;
-import model.users.Teacher;
-import view.*;
+package com.jp.trc.testing;
+
+import com.jp.trc.testing.model.TrainingCenter;
+import com.jp.trc.testing.model.testing.Question;
+import com.jp.trc.testing.model.testing.Subscription;
+import com.jp.trc.testing.model.testing.Testing;
+import com.jp.trc.testing.model.users.Admin;
+import com.jp.trc.testing.model.users.Student;
+import com.jp.trc.testing.model.users.Teacher;
+import com.jp.trc.testing.view.*;
 
 import java.util.ArrayList;
 import java.util.List;
