@@ -5,54 +5,95 @@ import com.jp.trc.testing.model.users.Teacher;
 
 import java.util.List;
 
-public class Testing {
-    private int id;
-    private String title;
-    private List<Question> questions;
-    private Teacher author;
-    private List<Student> students;
+/**
+ * Student Test.
+ * @author Surkov Aleksey (stibium128@gmail.com)
+ * @date 18.05.2020 10:05
+ */
+public class Test {
 
-    public Testing(int id, String title, List<Question> questions, Teacher author) {
+    /**
+     * Test id.
+     */
+    private int id;
+
+    /**
+     * Test title.
+     */
+    private String title;
+
+    /**
+     * Test questions.
+     */
+    private List<Question> questions;
+
+    /**
+     * Test author.
+     */
+    private Teacher author;
+
+    public Test(int id, String title, List<Question> questions, Teacher author) {
         this.id = id;
         this.title = title;
         this.questions = questions;
         this.author = author;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return value of id int
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Gets title.
+     *
+     * @return value of title java.lang.String
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets value title.
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets questions.
+     *
+     * @return value of questions java.util.List<com.jp.trc.testing.model.testing.Question>.
+     */
     public List<Question> getQuestions() {
         return questions;
     }
 
+    /**
+     * Adding question to the test.
+     */
     public void addQuestion(Question question) {
         questions.add(question);
     }
 
+    /**
+     * Gets author.
+     *
+     * @return value of author com.jp.trc.testing.model.users.Teacher
+     */
     public Teacher getAuthor() {
         return author;
     }
 
+    /**
+     * Sets value author.
+     */
     public void setAuthor(Teacher author) {
         this.author = author;
-    }
-
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
     }
 
     @Override

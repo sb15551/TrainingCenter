@@ -2,8 +2,8 @@ package com.jp.trc.testing;
 
 import com.jp.trc.testing.model.TrainingCenter;
 import com.jp.trc.testing.model.testing.Question;
-import com.jp.trc.testing.model.testing.Subscription;
-import com.jp.trc.testing.model.testing.Testing;
+import com.jp.trc.testing.model.testing.Assignment;
+import com.jp.trc.testing.model.testing.Test;
 import com.jp.trc.testing.model.users.Admin;
 import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.Teacher;
@@ -12,16 +12,21 @@ import com.jp.trc.testing.view.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Test class.
+ * @author Surkov Aleksey (stibium128@gmail.com)
+ * @date 18.05.2020 10:05
+ */
 public class MainTestingClass {
     private static TrainingCenter center = new TrainingCenter();
 
     public static void main(String[] args) {
-        addStudents();
+        addUsers();
         addTests();
-        new StartUI(new ValidateInput(new ConsoleInput()), center, System.out::println).init();
+        new StartUI(new ValidateInput(new ConsoleInput()), center).init();
     }
 
-    private static void addStudents() {
+    private static void addUsers() {
         center.addUser(new Student(1, "Тестов Тест Тестович", "test", "test", 30));
         center.addUser(new Student(2, "Иванов Иван Иванович", "ivan", "ivan", 25));
         center.addUser(new Student(3, "Петров Петр Петрович", "petr", "petr", 18));
@@ -48,18 +53,18 @@ public class MainTestingClass {
         questions.add(new Question("Вопрос 3", answers, 2));
         questions.add(new Question("Вопрос 4", answers, 4));
         questions.add(new Question("Вопрос 5", answers, 3));
-        center.addTest(new Testing(1, "Testing 1", questions, (Teacher) center.getUser(7)));
-        center.addTest(new Testing(2, "Testing 2", questions, (Teacher) center.getUser(9)));
-        center.addTest(new Testing(3, "Testing 3", questions, (Teacher) center.getUser(8)));
-        center.addTest(new Testing(4, "Testing 4", questions, (Teacher) center.getUser(9)));
+        center.addTest(new Test(1, "Testing 1", questions, (Teacher) center.getUser(7)));
+        center.addTest(new Test(2, "Testing 2", questions, (Teacher) center.getUser(9)));
+        center.addTest(new Test(3, "Testing 3", questions, (Teacher) center.getUser(8)));
+        center.addTest(new Test(4, "Testing 4", questions, (Teacher) center.getUser(9)));
 
-        center.addSubscription(new Subscription(1, 1, 5));
-        center.addSubscription(new Subscription(3, 2, 3));
-        center.addSubscription(new Subscription(6, 2, 6));
-        center.addSubscription(new Subscription(2, 1, 5));
-        center.addSubscription(new Subscription(3, 3, 1));
-        center.addSubscription(new Subscription(4, 3, 10));
-        center.addSubscription(new Subscription(5, 2, 7));
-        center.addSubscription(new Subscription(5, 4, 8));
+        center.addSubscription(new Assignment(1, 1, 5));
+        center.addSubscription(new Assignment(3, 2, 3));
+        center.addSubscription(new Assignment(6, 2, 6));
+        center.addSubscription(new Assignment(2, 1, 5));
+        center.addSubscription(new Assignment(3, 3, 1));
+        center.addSubscription(new Assignment(4, 3, 10));
+        center.addSubscription(new Assignment(5, 2, 7));
+        center.addSubscription(new Assignment(5, 4, 8));
     }
 }

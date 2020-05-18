@@ -1,21 +1,23 @@
-package com.jp.trc.testing.controller;
+package com.jp.trc.testing.view;
 
+import com.jp.trc.testing.controller.UserAction;
 import com.jp.trc.testing.model.TrainingCenter;
 import com.jp.trc.testing.model.users.User;
-import com.jp.trc.testing.view.Input;
 
 /**
- * Interface for creating an action.
+ * Exit program.
  * @author Surkov Aleksey (stibium128@gmail.com)
- * @date 18.05.2020 9:28
+ * @date 18.05.2020 10:05
  */
-public interface UserAction {
+public class ExitProgram implements UserAction {
 
     /**
-     * Action when selecting a menu item.
+     * Exit program.
      * @param center Institution in which the action is performed.
      * @param user The user of this institution for whom the action is performed.
      */
-    void execute(TrainingCenter center, User user);
-
+    @Override
+    public void execute(TrainingCenter center, User user) {
+        System.exit(0);
+    }
 }

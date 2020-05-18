@@ -6,36 +6,61 @@ import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
+/**
+ * Creating menu items.
+ * @author Surkov Aleksey (stibium128@gmail.com)
+ * @date 18.05.2020 10:05
+ */
 public class Menu {
+
+    /**
+     * List all menu items.
+     */
     private List<ItemMenu> menuItems;
+
+    /**
+     * List actions for each menu item.
+     */
     private List<UserAction> action = new ArrayList<>();
 
-    private User user;
-    private TrainingCenter center;
-    private Input input;
-    private final Consumer<String> output;
 
-    public Menu(User user, TrainingCenter center, Input input, Consumer<String> output) {
+    /**
+     * Authorized user for whom the menu is formed.
+     */
+    private User user;
+
+    /**
+     * Institution for which the menu is made.
+     */
+    private TrainingCenter center;
+
+    /**
+     * Constructor for creating a menu
+     * @param user Authorized user for whom the menu is formed.
+     * @param center Institution for which the menu is made.
+     */
+    public Menu(User user, TrainingCenter center) {
         this.user = user;
         this.center = center;
-        this.input = input;
-        this.output = output;
         createMenu();
     }
 
+    /**
+     * Creating menus for a specific type of user.
+     * @param type Type of user who is logged in.
+     */
     public void show(String type) {
         List<ItemMenu> menu = new ArrayList<ItemMenu>();
         int key = 0;
         for (ItemMenu item : menuItems) {
-            if (item.getType().equals(type)) {
+            if (item.getTypeUser().equals(type)) {
                 action.add(key, item.getAction());
                 item.setKey(key++);
                 menu.add(item);
             }
         }
-        menu.add(new ItemMenu(key,"Выход", type, new ExitProgram()));
+        menu.add(new ItemMenu(key,"Exit", type, new ExitProgram()));
         action.add(key, menu.get(menu.size() - 1).getAction());
         menu.forEach(System.out::println);
     }
@@ -50,13 +75,20 @@ public class Menu {
         menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new AdminController.ViewListUsers()));
     }
 
+    /**
+     * @return Number of actions for the created menu.
+     */
     public int getActionsLength() {
         return this.action.size();
     }
 
+    /**
+     * Executes action of a menu item with a key.
+     * @param key Menu item.
+     */
     public void select(int key) {
         System.out.println();
-        this.action.get(key).execute(input, center, user);
+        this.action.get(key).execute(center, user);
         System.out.println();
     }
 
