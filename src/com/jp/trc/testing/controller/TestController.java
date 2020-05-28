@@ -1,6 +1,6 @@
 package com.jp.trc.testing.controller;
 
-import com.jp.trc.testing.model.TestCenter;
+import com.jp.trc.testing.model.Institute;
 import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class TestController {
 
-    public static class ViewListTests implements UserAction {
+    public static class ViewListTestsAction implements UserAction {
 
         /**
          * List of tests available to the user.
@@ -24,12 +24,12 @@ public class TestController {
          * @param user The user of this institution for whom the action is performed.
          */
         @Override
-        public void execute(TestCenter center, User user) {
+        public void execute(Institute center, User user) {
             center.getTests().forEach(s -> System.out.printf("Тест \"%s\" - Number questions: %s\n", s.getTitle(), s.getQuestions().size()));
         }
     }
 
-    public static class ViewYourTests implements UserAction {
+    public static class ViewYourTestsAction implements UserAction {
 
         /**
          * Tests compiled by a teacher.
@@ -37,7 +37,7 @@ public class TestController {
          * @param user The user of this institution for whom the action is performed.
          */
         @Override
-        public void execute(TestCenter center, User user) {
+        public void execute(Institute center, User user) {
             List<Test> yourTests = center.getTests().stream().filter(t -> t.getAuthor().equals(user))
                     .collect(Collectors.toList());
             System.out.printf("\t%-8s\t|\t\t%-16s\n", "Name test", "Author");
@@ -45,7 +45,7 @@ public class TestController {
         }
     }
 
-    public static class ViewTestsResult implements UserAction {
+    public static class ViewTestsResultAction implements UserAction {
 
         /**
          * Test results.
@@ -53,7 +53,7 @@ public class TestController {
          * @param user The user of this institution for whom the action is performed.
          */
         @Override
-        public void execute(TestCenter center, User user) {
+        public void execute(Institute center, User user) {
             List<Assignment> assignments = new ArrayList<>();
             for (Test test : center.getTests()) {
                 if (test.getAuthor().equals(user)) {

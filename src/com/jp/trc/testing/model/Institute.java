@@ -17,7 +17,7 @@ import java.util.Map;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public class TestCenter {
+public class Institute {
 
     /**
      * Users.
@@ -34,7 +34,7 @@ public class TestCenter {
      */
     private List<Assignment> assignments;
 
-    public TestCenter() {
+    public Institute() {
         users = new HashMap<>();
         tests = new ArrayList<>();
         assignments = new ArrayList<>();

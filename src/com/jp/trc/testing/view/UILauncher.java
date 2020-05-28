@@ -1,6 +1,6 @@
 package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.model.TestCenter;
+import com.jp.trc.testing.model.Institute;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ public class UILauncher {
     /**
      * Institution for which the user interface is created.
      */
-    private final TestCenter center;
+    private final Institute center;
 
-    public UILauncher(Input input, TestCenter center) {
+    public UILauncher(Input input, Institute center) {
         this.input = input;
         this.center = center;
     }

@@ -1,7 +1,7 @@
 package com.jp.trc.testing.view;
 
 import com.jp.trc.testing.controller.*;
-import com.jp.trc.testing.model.TestCenter;
+import com.jp.trc.testing.model.Institute;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
@@ -33,14 +33,14 @@ public class Menu {
     /**
      * Institution for which the menu is made.
      */
-    private TestCenter center;
+    private Institute center;
 
     /**
      * Constructor for creating a menu
      * @param user Authorized user for whom the menu is formed.
      * @param center Institution for which the menu is made.
      */
-    public Menu(User user, TestCenter center) {
+    public Menu(User user, Institute center) {
         this.user = user;
         this.center = center;
         createMenu();
@@ -66,12 +66,12 @@ public class Menu {
     }
 
     private void createMenu() {
-        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new TestController.ViewListTests()));
+        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new TestController.ViewListTestsAction()));
 
-        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new TestController.ViewYourTests()));
-        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new TestController.ViewTestsResult()));
+        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new TestController.ViewYourTestsAction()));
+        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new TestController.ViewTestsResultAction()));
 
-        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new UserController.ViewListUsers()));
+        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new UserController.ViewListUsersAction()));
     }
 
     /**
