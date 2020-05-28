@@ -1,9 +1,9 @@
 package com.jp.trc.testing;
 
-import com.jp.trc.testing.model.TrainingCenter;
-import com.jp.trc.testing.model.testing.Question;
-import com.jp.trc.testing.model.testing.Assignment;
-import com.jp.trc.testing.model.testing.Test;
+import com.jp.trc.testing.model.TestCenter;
+import com.jp.trc.testing.model.tests.Question;
+import com.jp.trc.testing.model.tests.Assignment;
+import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.Admin;
 import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.Teacher;
@@ -14,16 +14,20 @@ import java.util.List;
 
 /**
  * Test class.
+ * Here are created users and tests.
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public class MainTestingClass {
-    private static TrainingCenter center = new TrainingCenter();
+public class TestClass {
+    /**
+     * The institution where users and tests are stored.
+     */
+    private static TestCenter center = new TestCenter();
 
     public static void main(String[] args) {
         addUsers();
         addTests();
-        new StartUI(new ValidateInput(new ConsoleInput()), center).init();
+        new UILauncher(new InputValidator(new ConsoleInput()), center).init();
     }
 
     private static void addUsers() {
@@ -58,13 +62,13 @@ public class MainTestingClass {
         center.addTest(new Test(3, "Testing 3", questions, (Teacher) center.getUser(8)));
         center.addTest(new Test(4, "Testing 4", questions, (Teacher) center.getUser(9)));
 
-        center.addSubscription(new Assignment(1, 1, 5));
-        center.addSubscription(new Assignment(3, 2, 3));
-        center.addSubscription(new Assignment(6, 2, 6));
-        center.addSubscription(new Assignment(2, 1, 5));
-        center.addSubscription(new Assignment(3, 3, 1));
-        center.addSubscription(new Assignment(4, 3, 10));
-        center.addSubscription(new Assignment(5, 2, 7));
-        center.addSubscription(new Assignment(5, 4, 8));
+        center.addAssignment(new Assignment(1, 1, 5));
+        center.addAssignment(new Assignment(3, 2, 3));
+        center.addAssignment(new Assignment(6, 2, 6));
+        center.addAssignment(new Assignment(2, 1, 5));
+        center.addAssignment(new Assignment(3, 3, 1));
+        center.addAssignment(new Assignment(4, 3, 10));
+        center.addAssignment(new Assignment(5, 2, 7));
+        center.addAssignment(new Assignment(5, 4, 8));
     }
 }

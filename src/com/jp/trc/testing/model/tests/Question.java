@@ -1,4 +1,4 @@
-package com.jp.trc.testing.model.testing;
+package com.jp.trc.testing.model.tests;
 
 import java.util.List;
 

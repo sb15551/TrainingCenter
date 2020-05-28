@@ -1,6 +1,6 @@
 package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.model.TrainingCenter;
+import com.jp.trc.testing.model.TestCenter;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public class StartUI {
+public class UILauncher {
 
     /**
      * Command input.
@@ -22,9 +22,9 @@ public class StartUI {
     /**
      * Institution for which the user interface is created.
      */
-    private final TrainingCenter center;
+    private final TestCenter center;
 
-    public StartUI(Input input, TrainingCenter center) {
+    public UILauncher(Input input, TestCenter center) {
         this.input = input;
         this.center = center;
     }

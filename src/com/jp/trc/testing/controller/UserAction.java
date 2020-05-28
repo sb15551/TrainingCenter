@@ -1,8 +1,7 @@
 package com.jp.trc.testing.controller;
 
-import com.jp.trc.testing.model.TrainingCenter;
+import com.jp.trc.testing.model.TestCenter;
 import com.jp.trc.testing.model.users.User;
-import com.jp.trc.testing.view.Input;
 
 /**
  * Interface for creating an action.
@@ -16,6 +15,6 @@ public interface UserAction {
      * @param center Institution in which the action is performed.
      * @param user The user of this institution for whom the action is performed.
      */
-    void execute(TrainingCenter center, User user);
+    void execute(TestCenter center, User user);
 
 }

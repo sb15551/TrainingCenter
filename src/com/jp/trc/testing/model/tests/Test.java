@@ -1,6 +1,5 @@
-package com.jp.trc.testing.model.testing;
+package com.jp.trc.testing.model.tests;
 
-import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.Teacher;
 
 import java.util.List;

@@ -14,7 +14,7 @@ public interface Input {
      * @param question Keyboard input hint.
      * @return String entered from the keyboard.
      */
-    String ask(String question);
+    String askItemMenu(String question);
 
     /**
      * Validates keyboard input.

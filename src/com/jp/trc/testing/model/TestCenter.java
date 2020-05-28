@@ -1,7 +1,7 @@
 package com.jp.trc.testing.model;
 
-import com.jp.trc.testing.model.testing.Assignment;
-import com.jp.trc.testing.model.testing.Test;
+import com.jp.trc.testing.model.tests.Assignment;
+import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.Teacher;
 import com.jp.trc.testing.model.users.User;
 
@@ -17,7 +17,7 @@ import java.util.Map;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public class TrainingCenter {
+public class TestCenter {
 
     /**
      * Users.
@@ -34,7 +34,7 @@ public class TrainingCenter {
      */
     private List<Assignment> assignments;
 
-    public TrainingCenter() {
+    public TestCenter() {
         users = new HashMap<>();
         tests = new ArrayList<>();
         assignments = new ArrayList<>();
@@ -46,7 +46,7 @@ public class TrainingCenter {
      * @return true, if user is added.
      */
     public boolean addUser(User user) {
-        if (existLogin(user.getLogin())){
+        if (existLogin(user.getLogin())) {
             System.out.println("Пользователь с таким логином уже существует!!!");
             return false;
         }
@@ -62,6 +62,15 @@ public class TrainingCenter {
     public boolean addTest(Test test) {
         return tests.add(test);
     }
+
+    /**
+     * Adds relationship "student-test".
+     * @param assignment Relationship "student-test".
+     */
+    public void addAssignment(Assignment assignment) {
+        assignments.add(assignment);
+    }
+
 
     /**
      * Checks if such login exists.
@@ -84,7 +93,7 @@ public class TrainingCenter {
     /**
      * Gets user by id.
      * @param id User id.
-     * @return
+     * @return Gets user by id.
      */
     public User getUser(int id) {
         for (User user : users.values()) {
@@ -107,9 +116,9 @@ public class TrainingCenter {
     /**
      * Gets test by id.
      * @param id Test id.
-     * @return
+     * @return Gets test by id.
      */
-    public Test getTest(int id){
+    public Test getTest(int id) {
         for (Test test : tests) {
             if (test.getId() == id) {
                 return test;
@@ -121,7 +130,7 @@ public class TrainingCenter {
     /**
      * Gets tests author.
      * @param teacher
-     * @return
+     * @return Gets tests author.
      */
     public List<Test> getTestsAuthor(Teacher teacher) {
         List<Test> temp = new ArrayList<>();

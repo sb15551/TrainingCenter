@@ -7,10 +7,10 @@ import java.util.List;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
 */
-public class ValidateInput implements Input {
+public class InputValidator implements Input {
     private final Input input;
 
-    public ValidateInput(final Input input) {
+    public InputValidator(final Input input) {
         this.input = input;
     }
 
@@ -20,8 +20,8 @@ public class ValidateInput implements Input {
      * @return String entered from the keyboard.
      */
     @Override
-    public String ask(String question) {
-        return this.input.ask(question);
+    public String askItemMenu(String question) {
+        return this.input.askItemMenu(question);
     }
 
     /**

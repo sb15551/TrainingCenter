@@ -1,6 +1,6 @@
 package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.model.TrainingCenter;
+import com.jp.trc.testing.model.TestCenter;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.Scanner;
@@ -15,9 +15,9 @@ public class LoginForm {
     /**
      * Institution where authorization is performed.
      */
-    private TrainingCenter center;
+    private TestCenter center;
 
-    public LoginForm(TrainingCenter center) {
+    public LoginForm(TestCenter center) {
         this.center = center;
     }
 

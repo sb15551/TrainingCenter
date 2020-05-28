@@ -1,7 +1,7 @@
 package com.jp.trc.testing.view;
 
 import com.jp.trc.testing.controller.*;
-import com.jp.trc.testing.model.TrainingCenter;
+import com.jp.trc.testing.model.TestCenter;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class Menu {
     /**
      * List all menu items.
      */
-    private List<ItemMenu> menuItems;
+    private List<ItemMenu> menuItems = new ArrayList<>();
 
     /**
      * List actions for each menu item.
@@ -33,14 +33,14 @@ public class Menu {
     /**
      * Institution for which the menu is made.
      */
-    private TrainingCenter center;
+    private TestCenter center;
 
     /**
      * Constructor for creating a menu
      * @param user Authorized user for whom the menu is formed.
      * @param center Institution for which the menu is made.
      */
-    public Menu(User user, TrainingCenter center) {
+    public Menu(User user, TestCenter center) {
         this.user = user;
         this.center = center;
         createMenu();
@@ -60,19 +60,18 @@ public class Menu {
                 menu.add(item);
             }
         }
-        menu.add(new ItemMenu(key,"Exit", type, new ExitProgram()));
+        menu.add(new ItemMenu(key, "Exit", type, new ExitProgram()));
         action.add(key, menu.get(menu.size() - 1).getAction());
         menu.forEach(System.out::println);
     }
 
     private void createMenu() {
-        menuItems = new ArrayList();
-        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new StudentController.ViewListTests()));
+        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new TestController.ViewListTests()));
 
-        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new TeacherController.ViewYourTests()));
-        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new TeacherController.ViewTestsResult()));
+        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new TestController.ViewYourTests()));
+        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new TestController.ViewTestsResult()));
 
-        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new AdminController.ViewListUsers()));
+        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new UserController.ViewListUsers()));
     }
 
     /**

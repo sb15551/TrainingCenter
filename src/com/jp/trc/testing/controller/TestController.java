@@ -1,21 +1,34 @@
 package com.jp.trc.testing.controller;
 
-import com.jp.trc.testing.model.TrainingCenter;
-import com.jp.trc.testing.model.testing.Assignment;
-import com.jp.trc.testing.model.testing.Test;
+import com.jp.trc.testing.model.TestCenter;
+import com.jp.trc.testing.model.tests.Assignment;
+import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
-import com.jp.trc.testing.view.Input;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Controller for users of type "Teacher".
+ * Controller for working with tests.
  * @author Surkov Aleksey (stibium128@gmail.com)
- * @date 18.05.2020 9:28
+ * @date 27.05.2020 9:20
  */
-public class TeacherController {
+public class TestController {
+
+    public static class ViewListTests implements UserAction {
+
+        /**
+         * List of tests available to the user.
+         * @param center Institution in which the action is performed.
+         * @param user The user of this institution for whom the action is performed.
+         */
+        @Override
+        public void execute(TestCenter center, User user) {
+            center.getTests().forEach(s -> System.out.printf("Тест \"%s\" - Number questions: %s\n", s.getTitle(), s.getQuestions().size()));
+        }
+    }
+
     public static class ViewYourTests implements UserAction {
 
         /**
@@ -24,9 +37,9 @@ public class TeacherController {
          * @param user The user of this institution for whom the action is performed.
          */
         @Override
-        public void execute(TrainingCenter center, User user) {
+        public void execute(TestCenter center, User user) {
             List<Test> yourTests = center.getTests().stream().filter(t -> t.getAuthor().equals(user))
-                                                  .collect(Collectors.toList());
+                    .collect(Collectors.toList());
             System.out.printf("\t%-8s\t|\t\t%-16s\n", "Name test", "Author");
             yourTests.forEach(System.out::println);
         }
@@ -40,7 +53,7 @@ public class TeacherController {
          * @param user The user of this institution for whom the action is performed.
          */
         @Override
-        public void execute(TrainingCenter center, User user) {
+        public void execute(TestCenter center, User user) {
             List<Assignment> assignments = new ArrayList<>();
             for (Test test : center.getTests()) {
                 if (test.getAuthor().equals(user)) {

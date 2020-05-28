@@ -17,7 +17,7 @@ public class ConsoleInput implements Input {
      * @return String entered from the keyboard.
      */
     @Override
-    public String ask(String question) {
+    public String askItemMenu(String question) {
         System.out.println(question);
         return scanner.nextLine();
     }
@@ -30,13 +30,11 @@ public class ConsoleInput implements Input {
      */
     @Override
     public int ask(String question, List<Integer> range) {
-        int key = Integer.valueOf(this.ask(question));
+        int key = Integer.valueOf(this.askItemMenu(question));
         boolean exist = false;
-        for (int value : range) {
-            if (value == key) {
-                exist = true;
-                break;
-            }
+        if (range.contains(key)) {
+            exist = true;
+            return key;
         }
         if (!exist) {
             throw new MenuOutException("Вне диапазона меню");

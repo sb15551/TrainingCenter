@@ -85,6 +85,10 @@ public class ItemMenu {
         this.key = key;
     }
 
+    /**
+     * Returns a string representation of the object in format "1. ItemMenu".
+     * @return a string representation of the object.
+     */
     @Override
     public String toString() {
         return String.format("%s. %s", key, itemName);

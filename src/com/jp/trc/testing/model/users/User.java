@@ -34,6 +34,14 @@ public abstract class User implements Comparable<User> {
      */
     private int age;
 
+    /**
+     * Constructor for creating a user.
+     * @param id User id.
+     * @param name Full name user.
+     * @param login Login user.
+     * @param password Password user.
+     * @param age Age user.
+     */
     public User(int id, String name, String login, String password, int age) {
         this.id = id;
         this.name = name;
@@ -115,24 +123,50 @@ public abstract class User implements Comparable<User> {
         this.age = age;
     }
 
+    /**
+     * Returns a string representation of the object in format "Name | Login | Password | Age | Type".
+     * @return a string representation of the object.
+     */
     @Override
     public String toString() {
         return String.format("%-40s\t|\t%-10s\t|\t%-10s\t|\t%s\t|\t%s", name, login, password, age, this.getClass().getSimpleName());
     }
 
+    /**
+     * Compares this object with the specified object for order. Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     *         is less than, equal to, or greater than the specified object.
+     */
     @Override
     public int compareTo(User o) {
         return this.name.compareTo(o.getName());
     }
 
+    /**
+     * Compared user by id.
+     * @param o user to compare.
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
         return id == user.id;
     }
 
+    /**
+     * Returns a hash code value for the object.
+     * @return a hash code value for this object.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id);
