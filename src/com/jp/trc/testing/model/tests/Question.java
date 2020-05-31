@@ -10,24 +10,40 @@ import java.util.List;
 public class Question {
 
     /**
-     * Question.
+     * Question id.
+     */
+    private int id;
+
+    /**
+     * Test id to which the question relates.
+     */
+    private int testId;
+
+    /**
+     * Question text.
      */
     private String query;
 
-    /**
-     * Answer variants.
-     */
-    private List<String> answers;
-
-    /**
-     * Correct answer.
-     */
-    private int correctAnswer;
-
-    public Question(String query, List<String> answers, int correctAnswer) {
+    public Question(int id, int testId, String query) {
+        this.id = id;
+        this.testId = testId;
         this.query = query;
-        this.answers = answers;
-        this.correctAnswer = correctAnswer;
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return value of id int
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Sets value id.
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -44,37 +60,5 @@ public class Question {
      */
     public void setQuery(String query) {
         this.query = query;
-    }
-
-    /**
-     * Gets answers
-     *
-     * @return value of answers java.util.List<java.lang.String>
-     */
-    public List<String> getAnswers() {
-        return answers;
-    }
-
-    /**
-     * Sets value answers
-     */
-    public void setAnswers(List<String> answers) {
-        this.answers = answers;
-    }
-
-    /**
-     * Gets correctAnswer
-     *
-     * @return value of correctAnswer int
-     */
-    public int getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    /**
-     * Sets value correctAnswer
-     */
-    public void setCorrectAnswer(int correctAnswer) {
-        this.correctAnswer = correctAnswer;
     }
 }

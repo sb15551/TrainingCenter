@@ -1,6 +1,6 @@
 package com.jp.trc.testing.controller;
 
-import com.jp.trc.testing.model.Institute;
+import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
@@ -16,59 +16,54 @@ import java.util.stream.Collectors;
  */
 public class TestController {
 
-    public static class ViewListTestsAction implements UserAction {
+    /**
+     * List of tests available to the user.
+     * @param studentId User id for which to get a list of tests.
+     * @return Tests available to user.
+     */
+    public List<Test> getTestsToStudent(int studentId) {
+        List<Test> tests = new ArrayList<>();
+        List<Assignment> assignments = Repository.getAssignments().stream()
+                .filter(test -> test.getStudentId() == studentId)
+                .collect(Collectors.toList());
 
-        /**
-         * List of tests available to the user.
-         * @param center Institution in which the action is performed.
-         * @param user The user of this institution for whom the action is performed.
-         */
-        @Override
-        public void execute(Institute center, User user) {
-            center.getTests().forEach(s -> System.out.printf("Тест \"%s\" - Number questions: %s\n", s.getTitle(), s.getQuestions().size()));
+        for (Assignment assignment : assignments) {
+            for (Test test : Repository.getTests()) {
+                if (assignment.getTestId() == test.getId()) {
+                    tests.add(test);
+                }
+            }
         }
+        return tests;
     }
 
-    public static class ViewYourTestsAction implements UserAction {
-
-        /**
-         * Tests compiled by a teacher.
-         * @param center Institution in which the action is performed.
-         * @param user The user of this institution for whom the action is performed.
-         */
-        @Override
-        public void execute(Institute center, User user) {
-            List<Test> yourTests = center.getTests().stream().filter(t -> t.getAuthor().equals(user))
-                    .collect(Collectors.toList());
-            System.out.printf("\t%-8s\t|\t\t%-16s\n", "Name test", "Author");
-            yourTests.forEach(System.out::println);
-        }
+    /**
+     * Tests compiled by a teacher.
+     * @param teacherId Teacher id who compiled tests.
+     * @return Tests compiled by a teacher.
+     */
+    public List<Test> getTestsByTeacher(int teacherId) {
+        return Repository.getTests().stream()
+                .filter(test -> test.getAuthor().getId() == teacherId)
+                .collect(Collectors.toList());
     }
 
-    public static class ViewTestsResultAction implements UserAction {
-
-        /**
-         * Test results.
-         * @param center Institution in which the action is performed.
-         * @param user The user of this institution for whom the action is performed.
-         */
-        @Override
-        public void execute(Institute center, User user) {
-            List<Assignment> assignments = new ArrayList<>();
-            for (Test test : center.getTests()) {
-                if (test.getAuthor().equals(user)) {
-                    for (Assignment assignment : center.getAssignments()) {
-                        if (assignment.getTestId() == test.getId()) {
-                            assignments.add(assignment);
-                        }
+    /**
+     * Tests results which compiled teacher.
+     * @param teacherId Teacher id who compiled tests.
+     * @return Test results for each student.
+     */
+    public List<Assignment> getResultTests(int teacherId) {
+        List<Assignment> assignments = new ArrayList<>();
+        for (Test test : Repository.getTests()) {
+            if (test.getAuthor().getId() == teacherId) {
+                for (Assignment assignment : Repository.getAssignments()) {
+                    if (assignment.getTestId() == test.getId()) {
+                        assignments.add(assignment);
                     }
                 }
             }
-            System.out.printf("\t\t\t%-28s\t|\t%-20s\t|\t%s\n", "Full name of student", "Test name", "Test result");
-            assignments.forEach(s -> System.out.printf("%-40s\t|\t%-20s\t|\t%s\n",
-                    center.getUser(s.getStudentId()).getName(),
-                    center.getTest(s.getTestId()).getTitle(),
-                    s.getResult()));
         }
+        return assignments;
     }
 }

@@ -22,19 +22,13 @@ public class Test {
     private String title;
 
     /**
-     * Test questions.
-     */
-    private List<Question> questions;
-
-    /**
      * Test author.
      */
     private Teacher author;
 
-    public Test(int id, String title, List<Question> questions, Teacher author) {
+    public Test(int id, String title, Teacher author) {
         this.id = id;
         this.title = title;
-        this.questions = questions;
         this.author = author;
     }
 
@@ -48,6 +42,15 @@ public class Test {
     }
 
     /**
+     * Sets value id.
+     *
+     * @param id value of id
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * Gets title.
      *
      * @return value of title java.lang.String
@@ -58,25 +61,11 @@ public class Test {
 
     /**
      * Sets value title.
+     *
+     * @param title value of title
      */
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    /**
-     * Gets questions.
-     *
-     * @return value of questions java.util.List<com.jp.trc.testing.model.testing.Question>.
-     */
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    /**
-     * Adding question to the test.
-     */
-    public void addQuestion(Question question) {
-        questions.add(question);
     }
 
     /**
@@ -90,11 +79,17 @@ public class Test {
 
     /**
      * Sets value author.
+     *
+     * @param author value of author
      */
     public void setAuthor(Teacher author) {
         this.author = author;
     }
 
+    /**
+     * Returns a string representation of the object in format "Title | Name author"
+     * @return a string representation of the object.
+     */
     @Override
     public String toString() {
         return String.format("%-20s\t|\t%-20s", title, author.getName());

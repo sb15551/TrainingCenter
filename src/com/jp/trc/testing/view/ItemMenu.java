@@ -1,7 +1,5 @@
 package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.controller.UserAction;
-
 /**
  * Menu item and action for it.
  * @author Surkov Aleksey (stibium128@gmail.com)
@@ -72,7 +70,7 @@ public class ItemMenu {
     /**
      * Gets action
      *
-     * @return value of action com.jp.trc.testing.controller.UserAction
+     * @return value of action com.jp.trc.testing.view.UserAction
      */
     public UserAction getAction() {
         return action;

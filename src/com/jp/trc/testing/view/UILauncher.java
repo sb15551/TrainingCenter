@@ -1,6 +1,6 @@
 package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.model.Institute;
+import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
@@ -19,24 +19,18 @@ public class UILauncher {
      */
     private final Input input;
 
-    /**
-     * Institution for which the user interface is created.
-     */
-    private final Institute center;
-
-    public UILauncher(Input input, Institute center) {
+    public UILauncher(Input input) {
         this.input = input;
-        this.center = center;
     }
 
     /**
      * User interface initialization.
      */
     public void init() {
-        LoginForm loginForm = new LoginForm(center);
+        LoginForm loginForm = new LoginForm();
         User loginUser = loginForm.login();
         String typeUser = loginUser.getClass().getSimpleName();
-        Menu menu = new Menu(loginUser, this.center);
+        Menu menu = new Menu(loginUser);
         List<Integer> range = new ArrayList<>();
         menu.show(typeUser);
         for (int i = 0; i < menu.getActionsLength(); i++) {

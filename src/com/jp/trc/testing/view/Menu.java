@@ -1,7 +1,7 @@
 package com.jp.trc.testing.view;
 
 import com.jp.trc.testing.controller.*;
-import com.jp.trc.testing.model.Institute;
+import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
@@ -31,18 +31,11 @@ public class Menu {
     private User user;
 
     /**
-     * Institution for which the menu is made.
-     */
-    private Institute center;
-
-    /**
      * Constructor for creating a menu
      * @param user Authorized user for whom the menu is formed.
-     * @param center Institution for which the menu is made.
      */
-    public Menu(User user, Institute center) {
+    public Menu(User user) {
         this.user = user;
-        this.center = center;
         createMenu();
     }
 
@@ -66,12 +59,12 @@ public class Menu {
     }
 
     private void createMenu() {
-        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new TestController.ViewListTestsAction()));
+        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new MenuAction.ViewListTestsAction()));
 
-        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new TestController.ViewYourTestsAction()));
-        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new TestController.ViewTestsResultAction()));
+        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new MenuAction.ViewYourTestsAction()));
+        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new MenuAction.ViewTestsResultAction()));
 
-        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new UserController.ViewListUsersAction()));
+        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new MenuAction.ViewListUsersAction()));
     }
 
     /**
@@ -87,7 +80,7 @@ public class Menu {
      */
     public void select(int key) {
         System.out.println();
-        this.action.get(key).execute(center, user);
+        this.action.get(key).execute(user);
         System.out.println();
     }
 

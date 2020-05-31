@@ -1,6 +1,6 @@
 package com.jp.trc.testing.controller;
 
-import com.jp.trc.testing.model.Institute;
+import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
@@ -15,19 +15,30 @@ import java.util.List;
  */
 public class UserController {
 
-    public static class ViewListUsersAction implements UserAction {
+    /**
+     * List of all users.
+     * @return List of all users.
+     */
+    public List<User> getAllUsers() {
+        return new ArrayList<>(Repository.getUsers().values());
+    }
 
-        /**
-         * Lists of all users of this institution.
-         * @param center Institution in which the action is performed.
-         * @param user The user of this institution for whom the action is performed.
-         */
-        @Override
-        public void execute(Institute center, User user) {
-            List<User> temp = new ArrayList<>(center.getUsers().values());
-            Collections.sort(temp, Comparator.naturalOrder());
-            System.out.printf("\t\t\t%-28s\t|\t%-10s\t|\t%-10s\t|\t%s\t|\t%s\n", "Full name user", "Login", "Password", "Age", "Type");
-            temp.forEach(System.out::println);
-        }
+    /**
+     * Does such a login exist in the database.
+     * @param login Login to check.
+     * @return true if login is finded.
+     */
+    public boolean existsLogin(String login) {
+        return Repository.getUsers().containsKey(login);
+    }
+
+    /**
+     * Verifies user password.
+     * @param login User login for which password is to be verified.
+     * @param password Password to check.
+     * @return true if the password matches.
+     */
+    public boolean verifiesPassword(String login, String password) {
+        return Repository.getUsers().get(login).getPassword().equals(password);
     }
 }

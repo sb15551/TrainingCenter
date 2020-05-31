@@ -1,6 +1,8 @@
 package com.jp.trc.testing.model;
 
+import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.tests.Assignment;
+import com.jp.trc.testing.model.tests.Question;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.Teacher;
 import com.jp.trc.testing.model.users.User;
@@ -11,33 +13,54 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Object of this class is created once and passed to methods.
- * In him stores users and tests.
+ * Repository for storing users, tests, questions and answers to them.
  *
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public class Institute {
+public class Repository {
 
     /**
      * Users.
      */
-    private Map<String, User> users;
+    private static Map<String, User> users = new HashMap<>();
 
     /**
      * Tests.
      */
-    private List<Test> tests;
+    private static List<Test> tests = new ArrayList<>();
+
+    /**
+     * Questions to tests .
+     */
+    private static List<Question> questions = new ArrayList<>();
+
+    /**
+     * Answers variants.
+     */
+    private static List<Answer> answers = new ArrayList<>();
 
     /**
      * Student assigned a test.
      */
-    private List<Assignment> assignments;
+    private static List<Assignment> assignments = new ArrayList<>();
 
-    public Institute() {
-        users = new HashMap<>();
-        tests = new ArrayList<>();
-        assignments = new ArrayList<>();
+    /**
+     * Adding question to tests.
+     * @param question
+     * @return true, if question is added.
+     */
+    public static boolean addQuestion(Question question) {
+        return questions.add(question);
+    }
+
+    /**
+     * Adding answer to questions.
+     * @param answer
+     * @return true, if answer is added.
+     */
+    public static boolean addAnswer(Answer answer) {
+        return answers.add(answer);
     }
 
     /**
@@ -45,7 +68,7 @@ public class Institute {
      * @param user User to add.
      * @return true, if user is added.
      */
-    public boolean addUser(User user) {
+    public static boolean addUser(User user) {
         if (existLogin(user.getLogin())) {
             System.out.println("Пользователь с таким логином уже существует!!!");
             return false;
@@ -59,26 +82,45 @@ public class Institute {
      * @param test Test to add.
      * @return true, if test is added.
      */
-    public boolean addTest(Test test) {
+    public static boolean addTest(Test test) {
         return tests.add(test);
     }
 
     /**
      * Adds relationship "student-test".
      * @param assignment Relationship "student-test".
+     * @return true, if assigment is added.
      */
-    public void addAssignment(Assignment assignment) {
-        assignments.add(assignment);
+    public static boolean addAssignment(Assignment assignment) {
+        return assignments.add(assignment);
     }
 
 
     /**
      * Checks if such login exists.
      * @param login Login to check.
-     * @return true, if such login exists
+     * @return true, if such login exists.
      */
-    private boolean existLogin(String login) {
+    private static boolean existLogin(String login) {
         return users.containsKey(login);
+    }
+
+    /**
+     * Gets questions.
+     *
+     * @return value of questions java.util.List<com.jp.trc.testing.model.tests.Question>
+     */
+    public static List<Question> getQuestions() {
+        return questions;
+    }
+
+    /**
+     * Gets answers.
+     *
+     * @return value of answers java.util.List<com.jp.trc.testing.model.tests.Answer>
+     */
+    public static List<Answer> getAnswers() {
+        return answers;
     }
 
     /**
@@ -86,7 +128,7 @@ public class Institute {
      *
      * @return value of users java.util.Map<java.lang.String,com.jp.trc.testing.model.users.User>
      */
-    public Map<String, User> getUsers() {
+    public static Map<String, User> getUsers() {
         return users;
     }
 
@@ -95,7 +137,7 @@ public class Institute {
      * @param id User id.
      * @return Gets user by id.
      */
-    public User getUser(int id) {
+    public static User getUser(int id) {
         for (User user : users.values()) {
             if (user.getId() == id) {
                 return user;
@@ -109,7 +151,7 @@ public class Institute {
      *
      * @return value of tests java.util.List<com.jp.trc.testing.model.testing.Test>
      */
-    public List<Test> getTests() {
+    public static List<Test> getTests() {
         return tests;
     }
 
@@ -118,7 +160,7 @@ public class Institute {
      * @param id Test id.
      * @return Gets test by id.
      */
-    public Test getTest(int id) {
+    public static Test getTest(int id) {
         for (Test test : tests) {
             if (test.getId() == id) {
                 return test;
@@ -132,7 +174,7 @@ public class Institute {
      * @param teacher
      * @return Gets tests author.
      */
-    public List<Test> getTestsAuthor(Teacher teacher) {
+    public static List<Test> getTestsAuthor(Teacher teacher) {
         List<Test> temp = new ArrayList<>();
         for (Test test : tests) {
             if (test.getAuthor().equals(teacher)) {
@@ -147,7 +189,7 @@ public class Institute {
      *
      * @return value of assignments java.util.List<com.jp.trc.testing.model.testing.Assignment>
      */
-    public List<Assignment> getAssignments() {
+    public static List<Assignment> getAssignments() {
         List<Assignment> temp = new ArrayList<>(assignments);
         return temp;
     }

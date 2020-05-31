@@ -1,7 +1,5 @@
 package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.controller.UserAction;
-import com.jp.trc.testing.model.Institute;
 import com.jp.trc.testing.model.users.User;
 
 /**
@@ -13,11 +11,10 @@ public class ExitProgram implements UserAction {
 
     /**
      * Exit program.
-     * @param center Institution in which the action is performed.
      * @param user The user of this institution for whom the action is performed.
      */
     @Override
-    public void execute(Institute center, User user) {
+    public void execute(User user) {
         System.exit(0);
     }
 }

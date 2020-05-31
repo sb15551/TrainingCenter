@@ -1,6 +1,6 @@
-package com.jp.trc.testing.controller;
+package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.model.Institute;
+import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.users.User;
 
 /**
@@ -12,9 +12,8 @@ public interface UserAction {
 
     /**
      * Action when selecting a menu item.
-     * @param center Institution in which the action is performed.
      * @param user The user of this institution for whom the action is performed.
      */
-    void execute(Institute center, User user);
+    void execute(User user);
 
 }
