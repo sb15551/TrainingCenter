@@ -10,6 +10,10 @@ import java.util.List;
 public class InputValidator implements Input {
     private final Input input;
 
+    /**
+     * Constructor for creating an object.
+     * @param input Keyboard input.
+     */
     public InputValidator(final Input input) {
         this.input = input;
     }

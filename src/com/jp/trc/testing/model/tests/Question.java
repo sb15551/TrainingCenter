@@ -1,7 +1,5 @@
 package com.jp.trc.testing.model.tests;
 
-import java.util.List;
-
 /**
  * Question for test.
  * @author Surkov Aleksey (stibium128@gmail.com)
@@ -24,6 +22,12 @@ public class Question {
      */
     private String query;
 
+    /**
+     * Constructor for creating an object.
+     * @param id Question id.
+     * @param testId Test id to which the question relates.
+     * @param query Question text.
+     */
     public Question(int id, int testId, String query) {
         this.id = id;
         this.testId = testId;

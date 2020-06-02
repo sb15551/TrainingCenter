@@ -2,8 +2,6 @@ package com.jp.trc.testing.model.tests;
 
 import com.jp.trc.testing.model.users.Teacher;
 
-import java.util.List;
-
 /**
  * Student Test.
  * @author Surkov Aleksey (stibium128@gmail.com)
@@ -26,6 +24,12 @@ public class Test {
      */
     private Teacher author;
 
+    /**
+     * Constructor for creating an object.
+     * @param id Test id.
+     * @param title Test title.
+     * @param author Test author.
+     */
     public Test(int id, String title, Teacher author) {
         this.id = id;
         this.title = title;

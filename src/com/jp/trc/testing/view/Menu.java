@@ -1,7 +1,5 @@
 package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.controller.*;
-import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
@@ -31,7 +29,7 @@ public class Menu {
     private User user;
 
     /**
-     * Constructor for creating a menu
+     * Constructor for creating a menu.
      * @param user Authorized user for whom the menu is formed.
      */
     public Menu(User user) {

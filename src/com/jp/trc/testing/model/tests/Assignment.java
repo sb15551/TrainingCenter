@@ -8,7 +8,7 @@ package com.jp.trc.testing.model.tests;
 public class Assignment {
 
     /**
-     * User id.
+     * Student id.
      */
     private int studentId;
 
@@ -22,11 +22,12 @@ public class Assignment {
      */
     private int result;
 
-    public Assignment(int studentId, int testId) {
-        this.studentId = studentId;
-        this.testId = testId;
-    }
-
+    /**
+     * Constructor for creating an object.
+     * @param studentId Student id.
+     * @param testId Test id.
+     * @param result Student test result.
+     */
     public Assignment(int studentId, int testId, int result) {
         this.studentId = studentId;
         this.testId = testId;

@@ -4,8 +4,6 @@ import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.users.User;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**

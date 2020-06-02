@@ -26,6 +26,13 @@ public class Answer {
      */
     private boolean correct;
 
+    /**
+     * Constructor for creating an object.
+     * @param id Answer id.
+     * @param questionId Question id to which the answer relates.
+     * @param title Answer text.
+     * @param correct Correct answer.
+     */
     public Answer(int id, int questionId, String title, boolean correct) {
         this.id = id;
         this.questionId = questionId;

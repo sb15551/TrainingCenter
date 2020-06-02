@@ -27,6 +27,13 @@ public class ItemMenu {
      */
     private int key;
 
+    /**
+     * Constructor for creating an object.
+     * @param key Unique menu item key.
+     * @param itemName Name menu item.
+     * @param typeUser Type of user for which the menu item will be displayed.
+     * @param action Action for menu item.
+     */
     public ItemMenu(int key, String itemName, String typeUser, UserAction action) {
         this.key = key;
         this.itemName = itemName;
@@ -34,6 +41,12 @@ public class ItemMenu {
         this.action = action;
     }
 
+    /**
+     * Constructor for creating an object.
+     * @param itemName Name menu item.
+     * @param typeUser Type of user for which the menu item will be displayed.
+     * @param action Action for menu item.
+     */
     public ItemMenu(String itemName, String typeUser, UserAction action) {
         this.itemName = itemName;
         this.typeUser = typeUser;

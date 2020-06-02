@@ -20,6 +20,11 @@ import java.util.Random;
  */
 public class TestClass {
 
+    /**
+     * The main method of operation of the program.
+     * This is where created users, tests, and questions and answers.
+     * @param args Argument list.
+     */
     public static void main(String[] args) {
         addUsers();
         addTests();

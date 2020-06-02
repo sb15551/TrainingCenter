@@ -15,10 +15,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Class for creating a menu item event.
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 29.05.2020 8:53
  */
 public class MenuAction {
+
+    /**
+     * List of tests available to the user.
+     */
     public static class ViewListTestsAction implements UserAction {
 
         /**
@@ -38,6 +43,9 @@ public class MenuAction {
         }
     }
 
+    /**
+     * Tests compiled by a teacher.
+     */
     public static class ViewYourTestsAction implements UserAction {
 
         /**
@@ -54,6 +62,9 @@ public class MenuAction {
         }
     }
 
+    /**
+     * Test results.
+     */
     public static class ViewTestsResultAction implements UserAction {
 
         /**
@@ -71,6 +82,9 @@ public class MenuAction {
         }
     }
 
+    /**
+     * Lists of all users of this institution.
+     */
     public static class ViewListUsersAction implements UserAction {
 
         /**

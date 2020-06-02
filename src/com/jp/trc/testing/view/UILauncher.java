@@ -19,6 +19,10 @@ public class UILauncher {
      */
     private final Input input;
 
+    /**
+     * Constructor for creating an object.
+     * @param input Keyboard input.
+     */
     public UILauncher(Input input) {
         this.input = input;
     }

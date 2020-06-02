@@ -17,6 +17,11 @@ public class AnswerToQuestion {
      */
     private int answerId;
 
+    /**
+     * Constructor for creating an object.
+     * @param studentId Student id.
+     * @param answerId Asnwer id that the student chose.
+     */
     public AnswerToQuestion(int studentId, int answerId) {
         this.studentId = studentId;
         this.answerId = answerId;
