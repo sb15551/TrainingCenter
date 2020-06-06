@@ -1,5 +1,7 @@
 package com.jp.trc.testing.model.tests;
 
+import java.util.Objects;
+
 /**
  * Student assigned a test.
  * @author Surkov Aleksey (stibium128@gmail.com)
@@ -66,5 +68,28 @@ public class Assignment {
      */
     public void setResult(int result) {
         this.result = result;
+    }
+
+    /**
+     * Comparing object by  student id and test id.
+     * @param o Object to compare.
+     * @return true if the objects are equal.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Assignment that = (Assignment) o;
+        return studentId == that.studentId &&
+                testId == that.testId;
+    }
+
+    /**
+     * Returns a hash code value for the object.
+     * @return a hash code value for this object.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentId, testId);
     }
 }

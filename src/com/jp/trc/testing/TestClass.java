@@ -1,13 +1,12 @@
 package com.jp.trc.testing;
 
+import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.tests.Question;
 import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.tests.Test;
-import com.jp.trc.testing.model.users.Admin;
-import com.jp.trc.testing.model.users.Student;
-import com.jp.trc.testing.model.users.Teacher;
+import com.jp.trc.testing.model.users.*;
 import com.jp.trc.testing.view.*;
 
 import java.util.Random;
@@ -22,7 +21,7 @@ public class TestClass {
 
     /**
      * The main method of operation of the program.
-     * This is where created users, tests, and questions and answers.
+     * This is where created users, groups, tests, and questions and answers.
      * @param args Argument list.
      */
     public static void main(String[] args) {
@@ -32,50 +31,76 @@ public class TestClass {
     }
 
     private static void addUsers() {
-        Repository.addUser(new Student(1, "Тестов Тест Тестович", "test", "test", 30));
-        Repository.addUser(new Student(2, "Иванов Иван Иванович", "ivan", "ivan", 25));
-        Repository.addUser(new Student(3, "Петров Петр Петрович", "petr", "petr", 18));
-        Repository.addUser(new Student(4, "Кузьмина Алевтина Кимовна", "alev", "alev", 20));
-        Repository.addUser(new Student(5, "Родионова Габи Иринеевна", "gabi", "gabi", 35));
-        Repository.addUser(new Student(6, "Сидоров Сидр Сидорович", "sidr", "sidr", 21));
+        Repository.addGroup(new Group(1, "Group 1"));
+        Repository.addGroup(new Group(2, "Group 2"));
+        Repository.addGroup(new Group(3, "Group 3"));
 
-        Repository.addUser(new Teacher(7, "Агафонова Кармелитта Филатовна", "karm", "karm", 40));
-        Repository.addUser(new Teacher(8, "Титова Раиса Игоревна", "raisa", "raisa", 42));
-        Repository.addUser(new Teacher(9, "Фадеев Флор Антонович", "flor", "flor", 51));
+        int userId = 0;
+        Repository.addUser(new Student(userId++, 1, "Тестов Тест Тестович", "test", "test", 30));
+        Repository.addUser(new Student(userId++, 1, "Иванов Иван Иванович", "ivan", "ivan", 25));
+        Repository.addUser(new Student(userId++, 2, "Петров Петр Петрович", "petr", "petr", 18));
+        Repository.addUser(new Student(userId++, 2, "Кузьмина Алевтина Кимовна", "alev", "alev", 20));
+        Repository.addUser(new Student(userId++, 3, "Родионова Габи Иринеевна", "gabi", "gabi", 35));
+        Repository.addUser(new Student(userId++, 3, "Сидоров Сидр Сидорович", "sidr", "sidr", 21));
+        Repository.addUser(new Student(userId++, 1, "Иванив Устин Фёдорович", "ustin", "ustin", 25));
+        Repository.addUser(new Student(userId++, 2, "Хренова Гадя Петрович", "gadya", "gadya", 24));
+        Repository.addUser(new Student(userId++, 3, "Зварыч Чарльз Вадимович", "char", "char", 30));
+        Repository.addUser(new Student(userId++, 1, "Горобчук Элина Сергеевна", "elina", "elina", 31));
+        Repository.addUser(new Student(userId++, 2, "Кошелева Ярослава Станиславовна", "slava", "slava", 19));
+        Repository.addUser(new Student(userId++, 3, "Гаврилов Шамиль Богданович", "sham", "sham", 22));
 
-        Repository.addUser(new Admin(10, "Admin", "root", "root", 27));
+        Repository.addUser(new Teacher(userId++, "Агафонова Кармелитта Филатовна", "karm", "karm", 40));
+        Repository.addUser(new Teacher(userId++, "Титова Раиса Игоревна", "raisa", "raisa", 42));
+        Repository.addUser(new Teacher(userId++, "Фадеев Флор Антонович", "flor", "flor", 51));
+
+        Repository.addUser(new Admin(userId++, "Admin", "root", "root", 27));
     }
 
     private static void addTests() {
-        Repository.addTest(new Test(1, "Testing 1", (Teacher) Repository.getUser(7)));
-        Repository.addTest(new Test(2, "Testing 2", (Teacher) Repository.getUser(9)));
-        Repository.addTest(new Test(3, "Testing 3", (Teacher) Repository.getUser(8)));
-        Repository.addTest(new Test(4, "Testing 4", (Teacher) Repository.getUser(9)));
+        Random random = new Random();
+        UserController userController = new UserController();
+
+        // Adding tests
+        int testId = 0;
+        for (User user : Repository.getUsers().values()) {
+            if (user instanceof Teacher) {
+                for (int i = 0; i < random.nextInt(5) + 1; i++) {
+                    Repository.addTest(new Test(
+                            testId,
+                            "Test " + testId,
+                            (Teacher) Repository.getUser(user.getId())
+                    ));
+                    testId++;
+                }
+            }
+        }
 
         // Adding questions to tests
-        for (int i = 0; i < 10; i++) {
+        for (Test test : Repository.getTests()) {
             for (int j = 0; j < 10; j++) {
-                Repository.addQuestion(new Question(j, i, "Question " + i));
+                Repository.addQuestion(new Question(j, test.getId(), "Question " + j));
             }
         }
 
         // Adding answers to question
-        int id = 1;
-        Random random = new Random();
         for (Question question : Repository.getQuestions()) {
             for (int i = 0; i < 5; i++) {
-                Repository.addAnswer(new Answer(id, question.getId(), "Answer " + i, random.nextBoolean()));
-                id++;
+                Repository.addAnswer(new Answer(i, question.getId(), "Answer " + i, random.nextBoolean()));
             }
         }
 
-        Repository.addAssignment(new Assignment(1, 1, 5));
-        Repository.addAssignment(new Assignment(3, 2, 3));
-        Repository.addAssignment(new Assignment(6, 2, 6));
-        Repository.addAssignment(new Assignment(2, 1, 5));
-        Repository.addAssignment(new Assignment(3, 3, 1));
-        Repository.addAssignment(new Assignment(4, 3, 10));
-        Repository.addAssignment(new Assignment(5, 2, 7));
-        Repository.addAssignment(new Assignment(5, 4, 8));
+        //Adding a test assignment
+        for (User user : Repository.getUsers().values()) {
+            if (user instanceof Student) {
+                for (int i = 0; i < random.nextInt(5) + 1; i++) {
+                    Repository.addAssignment(new Assignment(
+                            user.getId(),
+                            random.nextInt(Repository.getTests().size()) + 1,
+                            random.nextInt(10) + 1
+                    ));
+                    userController.calculateStudentRating(user.getId()); // Calculating student rating
+                }
+            }
+        }
     }
 }

@@ -4,13 +4,12 @@ import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.tests.Question;
 import com.jp.trc.testing.model.tests.Test;
+import com.jp.trc.testing.model.users.Group;
+import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.Teacher;
 import com.jp.trc.testing.model.users.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Repository for storing users, tests, questions and answers to them.
@@ -24,6 +23,11 @@ public class Repository {
      * Users.
      */
     private static Map<String, User> users = new HashMap<>();
+
+    /**
+     * Groups students.
+     */
+    private static List<Group> groups = new ArrayList<>();
 
     /**
      * Tests.
@@ -43,7 +47,16 @@ public class Repository {
     /**
      * Student assigned a test.
      */
-    private static List<Assignment> assignments = new ArrayList<>();
+    private static Set<Assignment> assignments = new HashSet<>();
+
+    /**
+     * Adding group students.
+     * @param group Groups students.
+     * @return true, if group is added.
+     */
+    public static boolean addGroup(Group group) {
+        return groups.add(group);
+    }
 
     /**
      * Adding question to tests.
@@ -124,7 +137,7 @@ public class Repository {
     }
 
     /**
-     * Gets users.
+     * Gets all users.
      *
      * @return value of users java.util.Map<java.lang.String,com.jp.trc.testing.model.users.User>
      */
@@ -141,6 +154,29 @@ public class Repository {
         for (User user : users.values()) {
             if (user.getId() == id) {
                 return user;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets groups.
+     *
+     * @return value of groups java.util.List<com.jp.trc.testing.model.users.Group>
+     */
+    public static List<Group> getGroups() {
+        return groups;
+    }
+
+    /**
+     * Gets group by id.
+     * @param id Group id.
+     * @return Gets group by id.
+     */
+    public static Group getGroup(int id) {
+        for (Group group : groups) {
+            if (group.getId() == id) {
+                return group;
             }
         }
         return null;

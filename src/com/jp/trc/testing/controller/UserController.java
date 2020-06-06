@@ -1,10 +1,14 @@
 package com.jp.trc.testing.controller;
 
 import com.jp.trc.testing.model.Repository;
+import com.jp.trc.testing.model.tests.Assignment;
+import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.User;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Controller for working with users of the institution.
@@ -38,5 +42,19 @@ public class UserController {
      */
     public boolean verifiesPassword(String login, String password) {
         return Repository.getUsers().get(login).getPassword().equals(password);
+    }
+
+    /**
+     * Calculates the student student rating.
+     * @param studentId Id of the student for which the rating is calculated.
+     */
+    public void calculateStudentRating(int studentId) {
+        List<Assignment> testsStudent = Repository.getAssignments().stream()
+                .filter(user -> user.getStudentId() == studentId)
+                .collect(Collectors.toList());
+        double rating = testsStudent.stream().mapToInt(Assignment::getResult).sum();
+        rating /= testsStudent.size();
+        Student student = (Student) Repository.getUser(studentId);
+        student.setRating(rating);
     }
 }

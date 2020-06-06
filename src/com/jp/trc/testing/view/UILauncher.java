@@ -33,16 +33,15 @@ public class UILauncher {
     public void init() {
         LoginForm loginForm = new LoginForm();
         User loginUser = loginForm.login();
-        String typeUser = loginUser.getClass().getSimpleName();
         Menu menu = new Menu(loginUser);
         List<Integer> range = new ArrayList<>();
-        menu.show(typeUser);
+        menu.show();
         for (int i = 0; i < menu.getActionsLength(); i++) {
             range.add(i);
         }
         while (true) {
             menu.select(input.ask("Введите пункт меню: ", range));
-            menu.show(typeUser);
+            menu.show();
         }
     }
 

@@ -20,7 +20,7 @@ public class Menu {
     /**
      * List actions for each menu item.
      */
-    private List<UserAction> action = new ArrayList<>();
+    private List<UserAction> action;
 
 
     /**
@@ -39,30 +39,42 @@ public class Menu {
 
     /**
      * Creating menus for a specific type of user.
-     * @param type Type of user who is logged in.
      */
-    public void show(String type) {
+    public void show() {
         List<ItemMenu> menu = new ArrayList<ItemMenu>();
-        int key = 0;
+        action  = new ArrayList<>();
+
+        menu.add(new ItemMenu(0, "Exit", user.getClass().getSimpleName(), new ExitProgram()));
+        action.add(0, menu.get(menu.size() - 1).getAction());
+
+        int key = 1;
         for (ItemMenu item : menuItems) {
-            if (item.getTypeUser().equals(type)) {
+            if (item.getTypeUser().equals(user.getClass().getSimpleName())) {
                 action.add(key, item.getAction());
                 item.setKey(key++);
                 menu.add(item);
             }
         }
-        menu.add(new ItemMenu(key, "Exit", type, new ExitProgram()));
-        action.add(key, menu.get(menu.size() - 1).getAction());
-        menu.forEach(System.out::println);
+        System.out.println("ГЛАВНОЕ МЕНЮ");
+        printMenu(menu);
+    }
+
+    private void printMenu(List<ItemMenu> menu) {
+        menu.stream().filter(itemMenu -> itemMenu.getKey() != 0)
+                .forEach(System.out::println);
+        menu.stream().filter(itemMenu -> itemMenu.getKey() == 0)
+                .forEach(System.out::println);
     }
 
     private void createMenu() {
-        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new MenuAction.ViewListTestsAction()));
+        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new MenuAction.ListTests()));
 
-        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new MenuAction.ViewYourTestsAction()));
-        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new MenuAction.ViewTestsResultAction()));
+        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new MenuAction.TeacherTests()));
+        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new MenuAction.TestsResult()));
+        menuItems.add(new ItemMenu("Посмотреть рейтинг студентов", "Teacher", new MenuAction.RatingStudents()));
+        menuItems.add(new ItemMenu("Посмотреть рейтинг студентов по группам", "Teacher", new MenuAction.RatingStudentsByGroup(user)));
 
-        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new MenuAction.ViewListUsersAction()));
+        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new MenuAction.ListUsers()));
     }
 
     /**
@@ -82,4 +94,12 @@ public class Menu {
         System.out.println();
     }
 
+    /**
+     * Gets user.
+     *
+     * @return value of user com.jp.trc.testing.model.users.User
+     */
+    public User getUser() {
+        return user;
+    }
 }
