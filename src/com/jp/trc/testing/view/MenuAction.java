@@ -22,7 +22,7 @@ public class MenuAction {
     /**
      * List of tests available to the user.
      */
-    public static class ListTests implements UserAction {
+    public static class ViewListTestsAction implements UserAction {
 
         /**
          * List of tests available to the user.
@@ -44,7 +44,7 @@ public class MenuAction {
     /**
      * Tests compiled by a teacher.
      */
-    public static class TeacherTests implements UserAction {
+    public static class ViewYourTestsAction implements UserAction {
 
         /**
          * Tests compiled by a teacher.
@@ -63,7 +63,7 @@ public class MenuAction {
     /**
      * Test results.
      */
-    public static class TestsResult implements UserAction {
+    public static class ViewTestsResultAction implements UserAction {
 
         /**
          * Test results.
@@ -83,7 +83,7 @@ public class MenuAction {
     /**
      * Lists of all users of this institution.
      */
-    public static class ListUsers implements UserAction {
+    public static class ViewListUsersAction implements UserAction {
 
         /**
          * Lists of all users of this institution.
@@ -101,7 +101,7 @@ public class MenuAction {
     /**
      * List of students sorted by rating.
      */
-    public static class RatingStudents implements UserAction {
+    public static class ViewRatingsAction implements UserAction {
 
         /**
          * List of students sorted by rating.
@@ -133,13 +133,13 @@ public class MenuAction {
         /**
          * Submenu with groups.
          */
-        private Submenu submenu;
+        private SubMenu subMenu;
 
         /**
          * Constructor for creating a object.
          */
         public RatingStudentsByGroup(User user) {
-            submenu = new Submenu(user, this.getClass().getSimpleName());
+            subMenu = new SubMenu(user, this.getClass().getSimpleName());
         }
 
         /**
@@ -157,7 +157,7 @@ public class MenuAction {
         @Override
         public void execute(User user) {
             if (groupId == 0) {
-                submenu.show();
+                subMenu.show();
             } else {
                 List<User> users = new UserController().getAllUsers();
                 List<Student> students = new ArrayList(

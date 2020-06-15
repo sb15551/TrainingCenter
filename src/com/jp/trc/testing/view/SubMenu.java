@@ -11,7 +11,7 @@ import java.util.List;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 05.06.2020 7:28
  */
-public class Submenu {
+public class SubMenu {
 
     /**
      * List submenu items.
@@ -36,7 +36,7 @@ public class Submenu {
     /**
      * Submenu name.
      */
-    private String submenuName;
+    private String subMenuName;
 
     /**
      * Constructor for creating a submenu.
@@ -44,16 +44,16 @@ public class Submenu {
      * @param user Authorized user for whom the menu is formed.
      * @param nameMenu The menu item for which you want to create a submenu.
      */
-    public Submenu(User user, String nameMenu) {
+    public SubMenu(User user, String nameMenu) {
         this.user = user;
-        submenuName = createSubmenu(nameMenu);
+        subMenuName = createSubMenu(nameMenu);
     }
 
     /**
      * Displays a submenu.
      */
     public void show() {
-        toBuild();
+        buildSubMenu();
         List<Integer> range = new ArrayList<>();
         for (int i = 0; i < this.action.size(); i++) {
             range.add(i);
@@ -65,7 +65,7 @@ public class Submenu {
                 return;
             }
             select(number);
-            toBuild();
+            buildSubMenu();
         }
     }
 
@@ -80,24 +80,28 @@ public class Submenu {
     }
 
     /**
-     * To build submenu.
+     * Building submenu and creating list actions.
      */
-    private void toBuild() {
-        List<ItemMenu> submenu = new ArrayList<ItemMenu>();
+    private void buildSubMenu() {
+        List<ItemMenu> subMenu = new ArrayList<ItemMenu>();
         action = new ArrayList<>();
-        submenu.add(new ItemMenu(0, "Back", user.getClass().getSimpleName(), new BackMainMenu()));
-        action.add(submenu.get(submenu.size() - 1).getAction());
+        subMenu.add(new ItemMenu(0, "Back", user.getClass().getSimpleName(), new BackMainMenu()));
+        action.add(subMenu.get(subMenu.size() - 1).getAction());
         int key = 1;
         for (ItemMenu item : submenuItems) {
             action.add(key, item.getAction());
             item.setKey(key++);
-            submenu.add(item);
+            subMenu.add(item);
         }
 
-        System.out.println("\t" + submenuName);
-        printMenu(submenu);
+        System.out.println("\t" + subMenuName);
+        printMenu(subMenu);
     }
 
+    /**
+     * Displays the menu on the screen so that the exit button is at the bottom.
+     * @param submenu List SubMenu.
+     */
     private void printMenu(List<ItemMenu> submenu) {
         submenu.stream().filter(itemMenu -> itemMenu.getKey() != 0)
                 .forEach(itemMenu -> System.out.println("\t" + itemMenu));
@@ -110,18 +114,18 @@ public class Submenu {
      * @param nameMenu Menu item for which a submenu is created.
      * @return Returns the name of the submenu.
      */
-    private String createSubmenu(String nameMenu) {
+    private String createSubMenu(String nameMenu) {
         if (nameMenu.equals("RatingStudentsByGroup")) {
-            createSubmenuByGroup();
+            createSubMenuForGroup();
             return "РЕЙТИНГ СТУДЕНТОВ ПО ГРУППАМ";
         }
         return null;
     }
 
     /**
-     * Creating submenu for "RatingStudentsByGroup".
+     * Creating submenu for groups.
      */
-    private void createSubmenuByGroup() {
+    private void createSubMenuForGroup() {
         for (Group group : Repository.getGroups()) {
             submenuItems.add(new ItemMenu(
                     group.getTitle(),
