@@ -1,20 +1,21 @@
-package com.jp.trc.testing.view;
+package com.jp.trc.testing.view.action;
 
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.Menu;
 
 /**
- * Exit program.
+ * Back to the main menu.
  * @author Surkov Aleksey (stibium128@gmail.com)
- * @date 18.05.2020 10:05
+ * @date 16.06.2020 20:30
  */
-public class ExitProgram implements UserAction {
+public class BackToMainMenuAction implements UserAction {
 
     /**
-     * Exit program.
+     * Back to the main menu.
      * @param user The user of this institution for whom the action is performed.
      */
     @Override
     public void execute(User user) {
-        System.exit(0);
+        new Menu(user).show();
     }
 }

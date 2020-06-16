@@ -1,8 +1,14 @@
-package com.jp.trc.testing.view;
+package com.jp.trc.testing.view.menu;
 
 import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.action.BackToMainMenuAction;
+import com.jp.trc.testing.view.action.UserAction;
+import com.jp.trc.testing.view.action.ViewRatingByGroupAction;
+import com.jp.trc.testing.view.input.ConsoleInput;
+import com.jp.trc.testing.view.input.Input;
+import com.jp.trc.testing.view.input.InputValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +91,12 @@ public class SubMenu {
     private void buildSubMenu() {
         List<ItemMenu> subMenu = new ArrayList<ItemMenu>();
         action = new ArrayList<>();
-        subMenu.add(new ItemMenu(0, "Back", user.getClass().getSimpleName(), new BackToMainMenuAction()));
+        subMenu.add(new ItemMenu(
+                0,
+                "Back",
+                user.getClass().getSimpleName(),
+                new BackToMainMenuAction()
+        ));
         action.add(subMenu.get(subMenu.size() - 1).getAction());
         int key = 1;
         for (ItemMenu item : submenuItems) {
@@ -115,7 +126,7 @@ public class SubMenu {
      * @return Returns the name of the submenu.
      */
     private String createSubMenu(String nameMenu) {
-        if (nameMenu.equals("RatingStudentsByGroup")) {
+        if (nameMenu.equals("ViewRatingByGroupAction")) {
             createSubMenuForGroup();
             return "РЕЙТИНГ СТУДЕНТОВ ПО ГРУППАМ";
         }
@@ -130,23 +141,8 @@ public class SubMenu {
             submenuItems.add(new ItemMenu(
                     group.getTitle(),
                     "Teacher",
-                    new MenuAction.RatingStudentsByGroup(group.getId())
+                    new ViewRatingByGroupAction(group.getId())
             ));
-        }
-    }
-
-    /**
-     * Back to the main menu.
-     */
-    public static class BackToMainMenuAction implements UserAction {
-
-        /**
-         * Back to the main menu.
-         * @param user The user of this institution for whom the action is performed.
-         */
-        @Override
-        public void execute(User user) {
-            new Menu(user).show();
         }
     }
 }

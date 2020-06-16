@@ -1,6 +1,7 @@
-package com.jp.trc.testing.view;
+package com.jp.trc.testing.view.menu;
 
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.action.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,34 +70,34 @@ public class Menu {
         menuItems.add(new ItemMenu(
                 "Посмотреть список тестов",
                 "Student",
-                new MenuAction.ViewListTestsAction()
+                new ViewListTestsAction()
         ));
 
         menuItems.add(new ItemMenu(
                 "Посмотреть свои тесты",
                 "Teacher",
-                new MenuAction.ViewYourTestsAction()
+                new ViewYourTestsAction()
         ));
         menuItems.add(new ItemMenu(
                 "Посмотреть результаты своих тестов",
                 "Teacher",
-                new MenuAction.ViewTestsResultAction()
+                new ViewTestsResultAction()
         ));
         menuItems.add(new ItemMenu(
                 "Посмотреть рейтинг студентов",
                 "Teacher",
-                new MenuAction.ViewRatingsAction()
+                new ViewRatingsAction()
         ));
         menuItems.add(new ItemMenu(
                 "Посмотреть рейтинг студентов по группам",
                 "Teacher",
-                new MenuAction.RatingStudentsByGroup(user)
+                new ViewRatingByGroupAction(user)
         ));
 
         menuItems.add(new ItemMenu(
                 "Посмотреть список пользователей",
                 "Admin",
-                new MenuAction.ViewListUsersAction()
+                new ViewListUsersAction()
         ));
     }
 

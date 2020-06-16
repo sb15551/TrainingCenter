@@ -1,4 +1,6 @@
-package com.jp.trc.testing.view;
+package com.jp.trc.testing.view.input;
+
+import com.jp.trc.testing.view.menu.MenuOutException;
 
 import java.util.List;
 import java.util.Scanner;

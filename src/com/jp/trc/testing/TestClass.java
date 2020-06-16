@@ -8,6 +8,8 @@ import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.*;
 import com.jp.trc.testing.view.*;
+import com.jp.trc.testing.view.input.ConsoleInput;
+import com.jp.trc.testing.view.input.InputValidator;
 
 import java.util.Random;
 

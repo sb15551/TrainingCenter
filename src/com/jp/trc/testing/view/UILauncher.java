@@ -1,7 +1,8 @@
 package com.jp.trc.testing.view;
 
-import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.input.Input;
+import com.jp.trc.testing.view.menu.Menu;
 
 import java.util.ArrayList;
 import java.util.List;

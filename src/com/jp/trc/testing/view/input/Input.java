@@ -1,4 +1,4 @@
-package com.jp.trc.testing.view;
+package com.jp.trc.testing.view.input;
 
 import java.util.List;
 

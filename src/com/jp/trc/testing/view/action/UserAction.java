@@ -1,4 +1,4 @@
-package com.jp.trc.testing.view;
+package com.jp.trc.testing.view.action;
 
 import com.jp.trc.testing.model.users.User;
 
