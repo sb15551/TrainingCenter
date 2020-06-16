@@ -22,7 +22,6 @@ public class Menu {
      */
     private List<UserAction> action;
 
-
     /**
      * Authorized user for whom the menu is formed.
      */
@@ -67,14 +66,38 @@ public class Menu {
     }
 
     private void createMenu() {
-        menuItems.add(new ItemMenu("Посмотреть список тестов", "Student", new MenuAction.ViewListTestsAction()));
+        menuItems.add(new ItemMenu(
+                "Посмотреть список тестов",
+                "Student",
+                new MenuAction.ViewListTestsAction()
+        ));
 
-        menuItems.add(new ItemMenu("Посмотреть свои тесты", "Teacher", new MenuAction.ViewYourTestsAction()));
-        menuItems.add(new ItemMenu("Посмотреть результаты своих тестов", "Teacher", new MenuAction.ViewTestsResultAction()));
-        menuItems.add(new ItemMenu("Посмотреть рейтинг студентов", "Teacher", new MenuAction.ViewRatingsAction()));
-        menuItems.add(new ItemMenu("Посмотреть рейтинг студентов по группам", "Teacher", new MenuAction.RatingStudentsByGroup(user)));
+        menuItems.add(new ItemMenu(
+                "Посмотреть свои тесты",
+                "Teacher",
+                new MenuAction.ViewYourTestsAction()
+        ));
+        menuItems.add(new ItemMenu(
+                "Посмотреть результаты своих тестов",
+                "Teacher",
+                new MenuAction.ViewTestsResultAction()
+        ));
+        menuItems.add(new ItemMenu(
+                "Посмотреть рейтинг студентов",
+                "Teacher",
+                new MenuAction.ViewRatingsAction()
+        ));
+        menuItems.add(new ItemMenu(
+                "Посмотреть рейтинг студентов по группам",
+                "Teacher",
+                new MenuAction.RatingStudentsByGroup(user)
+        ));
 
-        menuItems.add(new ItemMenu("Посмотреть список пользователей", "Admin", new MenuAction.ViewListUsersAction()));
+        menuItems.add(new ItemMenu(
+                "Посмотреть список пользователей",
+                "Admin",
+                new MenuAction.ViewListUsersAction()
+        ));
     }
 
     /**

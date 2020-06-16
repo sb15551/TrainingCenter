@@ -29,12 +29,15 @@ public class LoginForm {
         }
         System.out.print("Введите пароль: ");
         String password = scanner.nextLine();
-        while (!controller.verifiesPassword(login, password) ) {
+        while (!controller.verifiesPassword(login, password)) {
             System.out.println("Пароль не верный!!!");
             System.out.print("Введите еще раз: ");
             password = scanner.nextLine();
         }
-        System.out.printf("\n\nДобро пожаловать, %s\n\n", Repository.getUsers().get(login).getName());
+        System.out.printf(
+                "\n\nДобро пожаловать, %s\n\n",
+                Repository.getUsers().get(login).getName()
+        );
         return Repository.getUsers().get(login);
     }
 }

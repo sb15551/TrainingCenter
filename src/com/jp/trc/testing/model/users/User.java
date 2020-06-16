@@ -124,12 +124,20 @@ public abstract class User implements Comparable<User> {
     }
 
     /**
-     * Returns a string representation of the object in format "Name | Login | Password | Age | Type".
+     * Returns a string representation of the object in format
+     * "Name | Login | Password | Age | Type".
      * @return a string representation of the object.
      */
     @Override
     public String toString() {
-        return String.format("%-40s\t|\t%-10s\t|\t%-10s\t|\t%s\t|\t%s", name, login, password, age, this.getClass().getSimpleName());
+        return String.format(
+                "%-40s\t|\t%-10s\t|\t%-10s\t|\t%s\t|\t%s",
+                name,
+                login,
+                password,
+                age,
+                this.getClass().getSimpleName()
+        );
     }
 
     /**

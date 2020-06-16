@@ -72,7 +72,12 @@ public class MenuAction {
         @Override
         public void execute(User user) {
             List<Assignment> assignments = new TestController().getResultTests(user.getId());
-            System.out.printf("\t\t\t%-28s\t|\t%-20s\t|\t%s\n", "Full name of student", "Test name", "Test result");
+            System.out.printf(
+                    "\t\t\t%-28s\t|\t%-20s\t|\t%s\n",
+                    "Full name of student",
+                    "Test name",
+                    "Test result"
+            );
             assignments.forEach(s -> System.out.printf("%-40s\t|\t%-20s\t|\t%s\n",
                     Repository.getUser(s.getStudentId()).getName(),
                     Repository.getTest(s.getTestId()).getTitle(),
@@ -93,7 +98,14 @@ public class MenuAction {
         public void execute(User user) {
             List<User> users = new UserController().getAllUsers();
             Collections.sort(users, Comparator.naturalOrder());
-            System.out.printf("\t\t\t%-28s\t|\t%-10s\t|\t%-10s\t|\t%s\t|\t%s\n", "Full name user", "Login", "Password", "Age", "Type");
+            System.out.printf(
+                    "\t\t\t%-28s\t|\t%-10s\t|\t%-10s\t|\t%s\t|\t%s\n",
+                    "Full name user",
+                    "Login",
+                    "Password",
+                    "Age",
+                    "Type"
+            );
             users.forEach(System.out::println);
         }
     }
@@ -162,7 +174,8 @@ public class MenuAction {
                 List<User> users = new UserController().getAllUsers();
                 List<Student> students = new ArrayList(
                         users.stream()
-                                .filter(u -> u instanceof Student && ((Student) u).getGroupId() == groupId)
+                                .filter(u -> u instanceof Student
+                                        && ((Student) u).getGroupId() == groupId)
                                 .collect(Collectors.toList())
                 );
                 sortStudetns(students);

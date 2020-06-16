@@ -108,7 +108,6 @@ public class Repository {
         return assignments.add(assignment);
     }
 
-
     /**
      * Checks if such login exists.
      * @param login Login to check.
