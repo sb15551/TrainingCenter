@@ -85,7 +85,7 @@ public class SubMenu {
     private void buildSubMenu() {
         List<ItemMenu> subMenu = new ArrayList<ItemMenu>();
         action = new ArrayList<>();
-        subMenu.add(new ItemMenu(0, "Back", user.getClass().getSimpleName(), new BackMainMenu()));
+        subMenu.add(new ItemMenu(0, "Back", user.getClass().getSimpleName(), new BackToMainMenuAction()));
         action.add(subMenu.get(subMenu.size() - 1).getAction());
         int key = 1;
         for (ItemMenu item : submenuItems) {
@@ -138,7 +138,7 @@ public class SubMenu {
     /**
      * Back to the main menu.
      */
-    public static class BackMainMenu implements UserAction {
+    public static class BackToMainMenuAction implements UserAction {
 
         /**
          * Back to the main menu.
