@@ -22,7 +22,7 @@ public class Assignment {
     /**
      * Student test result.
      */
-    private int result;
+    private Integer result;
 
     /**
      * Constructor for creating an object.
@@ -30,10 +30,20 @@ public class Assignment {
      * @param testId Test id.
      * @param result Student test result.
      */
-    public Assignment(int studentId, int testId, int result) {
+    public Assignment(int studentId, int testId, Integer result) {
         this.studentId = studentId;
         this.testId = testId;
         this.result = result;
+    }
+
+    /**
+     * Constructor for creating an object.
+     * @param studentId Student id.
+     * @param testId Test id.
+     */
+    public Assignment(int studentId, int testId) {
+        this.studentId = studentId;
+        this.testId = testId;
     }
 
     /**
@@ -59,7 +69,7 @@ public class Assignment {
      *
      * @return value of result int
      */
-    public int getResult() {
+    public Integer getResult() {
         return result;
     }
 

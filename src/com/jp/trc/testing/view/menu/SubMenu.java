@@ -1,11 +1,11 @@
 package com.jp.trc.testing.view.menu;
 
+import com.jp.trc.testing.controller.TestController;
 import com.jp.trc.testing.model.Repository;
+import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.User;
-import com.jp.trc.testing.view.action.BackToMainMenuAction;
-import com.jp.trc.testing.view.action.UserAction;
-import com.jp.trc.testing.view.action.ViewRatingByGroupAction;
+import com.jp.trc.testing.view.action.*;
 import com.jp.trc.testing.view.input.ConsoleInput;
 import com.jp.trc.testing.view.input.Input;
 import com.jp.trc.testing.view.input.InputValidator;
@@ -130,7 +130,40 @@ public class SubMenu {
             createSubMenuForGroup();
             return "РЕЙТИНГ СТУДЕНТОВ ПО ГРУППАМ";
         }
+        if (nameMenu.equals("SelectTestAction")) {
+            createSubMenuForTests();
+            return "ВЫБОР ТЕСТА ДЛЯ ПРОХОЖДЕНИЯ";
+        }
+        if (nameMenu.equals("ViewTestStatisticAction")) {
+            createSubMenuForStatisticsTests();
+            return "ВЫБОР ТЕСТА ДЛЯ ПРОСМОТРА СТАТИСТИКИ";
+        }
         return null;
+    }
+
+    private void createSubMenuForStatisticsTests() {
+        TestController controller = new TestController();
+        for (Test test : controller.getTestsForStudent(user.getId())) {
+            submenuItems.add(new ItemMenu(
+                    test.getTitle(),
+                    user.getClass().getSimpleName(),
+                    new ViewTestStatisticAction(test.getId())
+            ));
+        }
+    }
+
+    /**
+     * Creating submenu for tests.
+     */
+    private void createSubMenuForTests() {
+        TestController controller = new TestController();
+        for (Test test : controller.getTestsForStudent(user.getId())) {
+            submenuItems.add(new ItemMenu(
+                    test.getTitle(),
+                    user.getClass().getSimpleName(),
+                    new SelectTestAction(test.getId())
+            ));
+        }
     }
 
     /**
@@ -140,7 +173,7 @@ public class SubMenu {
         for (Group group : Repository.getGroups()) {
             submenuItems.add(new ItemMenu(
                     group.getTitle(),
-                    "Teacher",
+                    user.getClass().getSimpleName(),
                     new ViewRatingByGroupAction(group.getId())
             ));
         }

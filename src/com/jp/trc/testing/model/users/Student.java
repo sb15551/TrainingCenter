@@ -4,6 +4,8 @@ import com.jp.trc.testing.model.Repository;
 
 import java.util.Locale;
 
+import static java.lang.Double.NaN;
+
 /**
  * User type "Student".
  * @author Surkov Aleksey (stibium128@gmail.com)
@@ -79,10 +81,12 @@ public class Student extends User {
     public String toString() {
         return String.format(
                 Locale.US,
-                "%-40s\t|\t%-10s\t|\t%.1f",
+                "%-40s\t|\t%-10s\t|\t%s",
                 super.getName(),
                 Repository.getGroup(groupId),
-                rating
+                Double.isNaN(rating)
+                        ? "Студент еще не прошел ни одного теста"
+                        : String.format("%.1f", rating)
         );
     }
 }

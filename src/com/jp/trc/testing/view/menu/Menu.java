@@ -72,6 +72,16 @@ public class Menu {
                 "Student",
                 new ViewListTestsAction()
         ));
+        menuItems.add(new ItemMenu(
+                "Выбрать тест для прохождения",
+                "Student",
+                new SelectTestAction(user)
+        ));
+        menuItems.add(new ItemMenu(
+                "Статистика тестов",
+                "Student",
+                new ViewTestStatisticAction(user)
+        ));
 
         menuItems.add(new ItemMenu(
                 "Посмотреть свои тесты",

@@ -52,4 +52,27 @@ public class InputValidator implements Input {
         } while (invalid);
         return value;
     }
+
+    /**
+     * Entering the response number when passing the test.
+     * @param question Keyboard input hint.
+     * @param size Size menu.
+     * @return
+     */
+    @Override
+    public int[] askNumberAnswer(String question, int size) {
+        boolean invalid = true;
+        int[] value = new int[size];
+        do {
+            try {
+                value = this.input.askNumberAnswer(question, size);
+                invalid = false;
+            } catch (MenuOutException moe) {
+                System.out.println("Введите ключ из диапазона меню");
+            } catch (NumberFormatException nfe) {
+                System.out.println("Введите корректные данные");
+            }
+        } while (invalid);
+        return value;
+    }
 }

@@ -1,9 +1,6 @@
 package com.jp.trc.testing.model;
 
-import com.jp.trc.testing.model.tests.Answer;
-import com.jp.trc.testing.model.tests.Assignment;
-import com.jp.trc.testing.model.tests.Question;
-import com.jp.trc.testing.model.tests.Test;
+import com.jp.trc.testing.model.tests.*;
 import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.Teacher;
@@ -48,6 +45,11 @@ public class Repository {
      * Student assigned a test.
      */
     private static Set<Assignment> assignments = new HashSet<>();
+
+    /**
+     * Student answer to a question.
+     */
+    private static Set<AnswerToQuestion> answerToQuestions = new HashSet<>();
 
     /**
      * Adding group students.
@@ -109,6 +111,15 @@ public class Repository {
     }
 
     /**
+     * Adds student answer to a question.
+     * @param answerToQuestion Student answer to a question.
+     * @return true, if answer to question added.
+     */
+    public static boolean addAnswerToQuestion(AnswerToQuestion answerToQuestion) {
+        return answerToQuestions.add(answerToQuestion);
+    }
+
+    /**
      * Checks if such login exists.
      * @param login Login to check.
      * @return true, if such login exists.
@@ -135,6 +146,15 @@ public class Repository {
         return answers;
     }
 
+    public Answer getAnswer(int answerId) {
+        for (Answer answer : answers) {
+            if (answer.getId() == answerId) {
+                return answer;
+            }
+        }
+        return null;
+    }
+
     /**
      * Gets all users.
      *
@@ -156,6 +176,15 @@ public class Repository {
             }
         }
         return null;
+    }
+
+    /**
+     * Gets answerToQuestions.
+     *
+     * @return value of answerToQuestions java.util.Set<com.jp.trc.testing.model.tests.AnswerToQuestion>
+     */
+    public static Set<AnswerToQuestion> getAnswerToQuestions() {
+        return answerToQuestions;
     }
 
     /**
@@ -227,6 +256,21 @@ public class Repository {
     public static List<Assignment> getAssignments() {
         List<Assignment> temp = new ArrayList<>(assignments);
         return temp;
+    }
+
+    /**
+     * Get the test id assigned to the student.
+     * @param studentId Student id.
+     * @param testId Test id.
+     * @return student-test attitude.
+     */
+    public static Assignment getAssignment(int studentId, int testId) {
+        for (Assignment assignment : assignments) {
+            if (assignment.getStudentId() == studentId && assignment.getTestId() == testId) {
+                return assignment;
+            }
+        }
+        return null;
     }
 
 }

@@ -25,15 +25,22 @@ public class Test {
     private Teacher author;
 
     /**
+     * Max score for passing the test.
+     */
+    private int passingScore;
+
+    /**
      * Constructor for creating an object.
      * @param id Test id.
      * @param title Test title.
      * @param author Test author.
+     * @param passingScore Max score for passing the test.
      */
-    public Test(int id, String title, Teacher author) {
+    public Test(int id, String title, Teacher author, int passingScore) {
         this.id = id;
         this.title = title;
         this.author = author;
+        this.passingScore = passingScore;
     }
 
     /**
@@ -88,6 +95,24 @@ public class Test {
      */
     public void setAuthor(Teacher author) {
         this.author = author;
+    }
+
+    /**
+     * Gets passingScore.
+     *
+     * @return value of passingScore int
+     */
+    public int getPassingScore() {
+        return passingScore;
+    }
+
+    /**
+     * Sets value passingScore.
+     *
+     * @param passingScore value of passingScore
+     */
+    public void setPassingScore(int passingScore) {
+        this.passingScore = passingScore;
     }
 
     /**

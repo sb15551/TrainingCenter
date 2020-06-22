@@ -22,13 +22,18 @@ public class ViewListTestsAction implements UserAction {
      */
     @Override
     public void execute(User user) {
-        List<Test> tests = new TestController().getTestsToStudent(user.getId());
+        TestController controller = new TestController();
+        List<Test> tests = controller.getTestsForStudent(user.getId());
         List<Question> questions = new ArrayList<>(Repository.getQuestions());
 
         for (Test test : tests) {
-            long size = questions.stream().filter(q -> test.getId() == q.getId())
-                    .count();
-            System.out.printf("Тест \"%s\" - Quentity questions: %s\n", test.getTitle(), size);
+            long size = controller.getQuestionQuentityInTest(test.getId());
+
+            System.out.printf(
+                    "Тест \"%s\" - Quentity questions: %s\n",
+                    test.getTitle(),
+                    size
+            );
         }
     }
 }

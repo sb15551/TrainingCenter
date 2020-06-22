@@ -65,4 +65,22 @@ public class Question {
     public void setQuery(String query) {
         this.query = query;
     }
+
+    /**
+     * Gets testId.
+     *
+     * @return value of testId int
+     */
+    public int getTestId() {
+        return testId;
+    }
+
+    /**
+     * Sets value testId.
+     *
+     * @param testId value of testId
+     */
+    public void setTestId(int testId) {
+        this.testId = testId;
+    }
 }

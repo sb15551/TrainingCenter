@@ -1,5 +1,7 @@
 package com.jp.trc.testing.model.tests;
 
+import java.util.Objects;
+
 /**
  * Student's answer to the question in the course of passing the test.
  * @author Surkov Aleksey (stibium128@gmail.com)
@@ -61,5 +63,32 @@ public class AnswerToQuestion {
      */
     public void setAnswerId(int answerId) {
         this.answerId = answerId;
+    }
+
+    /**
+     * Comparing object by  student id and answer id.
+     * @param o Object to compare.
+     * @return true if the objects are equal.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AnswerToQuestion that = (AnswerToQuestion) o;
+        return studentId == that.studentId
+                && answerId == that.answerId;
+    }
+
+    /**
+     * Returns a hash code value for the object.
+     * @return a hash code value for this object.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentId, answerId);
     }
 }

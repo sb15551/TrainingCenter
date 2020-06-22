@@ -43,4 +43,27 @@ public class ConsoleInput implements Input {
         }
         return key;
     }
+
+    /**
+     * Entering the response number when passing the test.
+     * @param question Keyboard input hint.
+     * @param size Size menu.
+     * @return
+     */
+    @Override
+    public int[] askNumberAnswer(String question, int size) {
+        String[] answers = this.askItemMenu(question).trim().split("\\s+");
+        int[] keys = new int[answers.length];
+
+        for (int i = 0; i < answers.length; i++) {
+            int key = Integer.parseInt(answers[i]);
+            if (key <= size && key > 0) {
+                keys[i] = key;
+            } else {
+                throw new MenuOutException("Вне диапазона меню");
+            }
+        }
+
+        return keys;
+    }
 }

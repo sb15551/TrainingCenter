@@ -5,7 +5,6 @@ import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.User;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +49,8 @@ public class UserController {
      */
     public void calculateStudentRating(int studentId) {
         List<Assignment> testsStudent = Repository.getAssignments().stream()
-                .filter(user -> user.getStudentId() == studentId)
+                .filter(assignment -> assignment.getStudentId() == studentId
+                        && assignment.getResult() != null)
                 .collect(Collectors.toList());
         double rating = testsStudent.stream().mapToInt(Assignment::getResult).sum();
         rating /= testsStudent.size();

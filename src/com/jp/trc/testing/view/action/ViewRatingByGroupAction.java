@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Group of students sorted by rating.
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 16.06.2020 20:36
  */

@@ -70,7 +70,8 @@ public class TestClass {
                     Repository.addTest(new Test(
                             testId,
                             "Test " + testId,
-                            (Teacher) Repository.getUser(user.getId())
+                            (Teacher) Repository.getUser(user.getId()),
+                            8
                     ));
                     testId++;
                 }
@@ -78,27 +79,29 @@ public class TestClass {
         }
 
         // Adding questions to tests
+        int questionId = 0;
         for (Test test : Repository.getTests()) {
             for (int j = 0; j < 10; j++) {
-                Repository.addQuestion(new Question(j, test.getId(), "Question " + j));
+                Repository.addQuestion(new Question(questionId++, test.getId(), "Question " + j));
             }
         }
 
         // Adding answers to question
+        int answerId = 0;
         for (Question question : Repository.getQuestions()) {
             for (int i = 0; i < 5; i++) {
-                Repository.addAnswer(new Answer(i, question.getId(), "Answer " + i, random.nextBoolean()));
+                Repository.addAnswer(new Answer(answerId++, question.getId(), "Answer " + i, random.nextBoolean()));
             }
         }
 
         //Adding a test assignment
         for (User user : Repository.getUsers().values()) {
             if (user instanceof Student) {
-                for (int i = 0; i < random.nextInt(5) + 1; i++) {
+                for (int i = 0; i < random.nextInt(5) + 3; i++) {
                     Repository.addAssignment(new Assignment(
                             user.getId(),
                             random.nextInt(Repository.getTests().size()) + 1,
-                            random.nextInt(10) + 1
+                            null
                     ));
                     userController.calculateStudentRating(user.getId()); // Calculating student rating
                 }

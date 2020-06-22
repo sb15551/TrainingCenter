@@ -23,4 +23,12 @@ public interface Input {
      * @return Menu item number.
      */
     int ask(String question, List<Integer> range);
+
+    /**
+     * Entering the response number when passing the test.
+     * @param question Keyboard input hint.
+     * @param size Size menu.
+     * @return
+     */
+    int[] askNumberAnswer(String question, int size);
 }
