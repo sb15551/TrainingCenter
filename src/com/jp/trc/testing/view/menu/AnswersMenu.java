@@ -1,10 +1,9 @@
-package com.jp.trc.testing.view.passagetest;
+package com.jp.trc.testing.view.menu;
 
 import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.action.SelectAnswerAction;
 import com.jp.trc.testing.view.action.UserAction;
-import com.jp.trc.testing.view.menu.ItemMenu;
 
 import java.util.ArrayList;
 import java.util.List;

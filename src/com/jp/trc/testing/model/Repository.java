@@ -181,7 +181,7 @@ public class Repository {
     /**
      * Gets answerToQuestions.
      *
-     * @return value of answerToQuestions java.util.Set<com.jp.trc.testing.model.tests.AnswerToQuestion>
+     * @return value of answerToQuestions java.util.Set<AnswerToQuestion>
      */
     public static Set<AnswerToQuestion> getAnswerToQuestions() {
         return answerToQuestions;

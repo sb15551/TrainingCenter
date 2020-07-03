@@ -1,8 +1,17 @@
 package com.jp.trc.testing.view.action;
 
+import com.jp.trc.testing.controller.TestController;
+import com.jp.trc.testing.controller.UserController;
+import com.jp.trc.testing.model.tests.Answer;
+import com.jp.trc.testing.model.tests.Question;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.input.ConsoleInput;
+import com.jp.trc.testing.view.input.Input;
+import com.jp.trc.testing.view.input.InputValidator;
 import com.jp.trc.testing.view.menu.SubMenu;
-import com.jp.trc.testing.view.passagetest.PassageTest;
+import com.jp.trc.testing.view.menu.AnswersMenu;
+
+import java.util.List;
 
 /**
  * Displays a menu with tests or starts a test.
@@ -20,6 +29,21 @@ public class SelectTestAction implements UserAction {
      * Submenu with tests.
      */
     private SubMenu subMenu;
+
+    /**
+     * Keyboard input.
+     */
+    private Input input = new InputValidator(new ConsoleInput());
+
+    /**
+     * Controller to access the database.
+     */
+    private TestController testController = new TestController();
+
+    /**
+     * Controller to access the database.
+     */
+    private UserController userController = new UserController();
 
     /**
      * Constructor for creating a object.
@@ -47,7 +71,45 @@ public class SelectTestAction implements UserAction {
         if (testId == 0) {
             subMenu.show();
         } else {
-            new PassageTest(user, testId).beginTest();
+            userController = new UserController();
+            testController = new TestController();
+            input = new InputValidator(new ConsoleInput());
+
+            beginTest(user);
+            endTest(user);
         }
+    }
+
+    /**
+     * Method for test begin.
+     */
+    private void beginTest(User user) {
+        int number = 1;
+        for (Question question : testController.getTestQuestions(testId)) {
+            List<Answer> answers = testController.getAnswerVariants(question.getId());
+            testController.clearAnswerToQuestion(user.getId(), question.getId());
+
+            AnswersMenu answersMenu = new AnswersMenu(user, answers);
+
+            answersMenu.show(String.format("Вопрос №%s: %s", number++, question.getQuery()));
+
+            int[] selectAnswers = input.askNumberAnswer("Введите номер ответа. "
+                    + "\nЕсли ответов несколько введите их через пробел: ", answers.size());
+
+            for (int numberAnswer : selectAnswers) {
+                answersMenu.select(numberAnswer);
+            }
+        }
+    }
+
+    /**
+     * Method for test end.
+     */
+    private void endTest(User user) {
+        System.out.println("\nТест завершен!");
+        int resultTest = Math.round(testController.calculateTestResult(user.getId(), testId) / 10);
+        System.out.printf("Результат теста: %s", resultTest);
+        testController.getAssignment(user.getId(), testId).setResult(resultTest);
+        userController.calculateStudentRating(user.getId());
     }
 }

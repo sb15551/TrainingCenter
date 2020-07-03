@@ -3,6 +3,7 @@ package com.jp.trc.testing.view.action;
 import com.jp.trc.testing.controller.TestController;
 import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.tests.Question;
+import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.menu.SubMenu;
 
@@ -57,23 +58,24 @@ public class ViewTestStatisticAction implements UserAction {
         if (testId == 0) {
             subMenu.show();
         } else {
+            Test test = testController.getTest(testId);
             Integer testResult = testController.getAssignment(user.getId(), testId).getResult();
             if (testResult == null) {
-                System.out.println(testController.getTest(testId).getTitle()
-                        + " еще ни разу не проходили");
+                System.out.println(test.getTitle() + " еще ни разу не проходили");
             } else {
-                int passingScore = testController.getTest(testId).getPassingScore();
+                int passingScore = test.getPassingScore();
 
                 List<Question> questions = testController.getTestQuestions(testId);
 
                 String passed = testResult >= passingScore ? "Пройден" : "Не пройден";
 
-                System.out.println(testController.getTest(testId).getTitle());
+                System.out.println(test.getTitle());
                 System.out.printf("Результаты теста: %s (%s)\n", testResult, passed);
                 System.out.println("Результаты вопросов теста:");
 
                 for (Question question : questions) {
-                    List<Answer> answerVariants = testController.getAnswerVariants(question.getId());
+                    List<Answer> answerVariants = testController
+                            .getAnswerVariants(question.getId());
 
                     int countCorrectAnswers = testController
                             .getCorrectAnswersStudent(user.getId(), question.getId())
@@ -85,7 +87,11 @@ public class ViewTestStatisticAction implements UserAction {
                     System.out.printf(
                             "\t%s - %s\n",
                             question.getQuery(),
-                            getResultQuestion(answerVariants, countCorrectAnswers, countIncorrectAnswers)
+                            getResultQuestion(
+                                    answerVariants,
+                                    countCorrectAnswers,
+                                    countIncorrectAnswers
+                            )
                     );
                 }
                 System.out.println("Процент правильных ответов: "

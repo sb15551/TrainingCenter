@@ -4,6 +4,9 @@ import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.exception.LoginExistsException;
+import com.jp.trc.testing.view.exception.ObjectNotFoundException;
+import com.jp.trc.testing.view.exception.VerifiesPasswordException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +28,29 @@ public class UserController {
     }
 
     /**
+     * Get user by login.
+     * @param login User login.
+     * @return user by login.
+     * @throws ObjectNotFoundException Exception is thrown if sought-for user not found.
+     */
+    public User getUser(String login) throws ObjectNotFoundException {
+        if (!Repository.getUsers().containsKey(login)) {
+            throw new ObjectNotFoundException("Such user not found!!!");
+        }
+        return Repository.getUsers().get(login);
+    }
+
+    /**
      * Does such a login exist in the database.
      * @param login Login to check.
      * @return true if login is finded.
+     * @throws LoginExistsException
      */
-    public boolean existsLogin(String login) {
+    public boolean existsLogin(String login) throws LoginExistsException {
+        if (!Repository.getUsers().containsKey(login)) {
+            throw new LoginExistsException("Такого логина не существует!\n"
+                    + "Введите заново: ");
+        }
         return Repository.getUsers().containsKey(login);
     }
 
@@ -38,8 +59,14 @@ public class UserController {
      * @param login User login for which password is to be verified.
      * @param password Password to check.
      * @return true if the password matches.
+     * @throws VerifiesPasswordException
      */
-    public boolean verifiesPassword(String login, String password) {
+    public boolean verifiesPassword(String login, String password)
+            throws VerifiesPasswordException {
+        if (!Repository.getUsers().get(login).getPassword().equals(password)) {
+            throw new VerifiesPasswordException("Пароль не верный!!!\n"
+                    + "Введите еще раз: ");
+        }
         return Repository.getUsers().get(login).getPassword().equals(password);
     }
 

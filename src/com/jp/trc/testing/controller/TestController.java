@@ -2,6 +2,7 @@ package com.jp.trc.testing.controller;
 
 import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.tests.*;
+import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +40,15 @@ public class TestController {
      * Get test by id.
      * @param testId Test id.
      * @return test by id.
+     * @throws ObjectNotFoundException Exception is thrown if sought-for test not found.
      */
-    public Test getTest(int testId) {
+    public Test getTest(int testId) throws ObjectNotFoundException {
         for (Test test : Repository.getTests()) {
             if (test.getId() == testId) {
                 return test;
             }
         }
-        return null;
+        throw new ObjectNotFoundException("Such test not found!!!");
     }
 
     /**
@@ -97,14 +99,15 @@ public class TestController {
      * Get answer.
      * @param answerId Id answer to get.
      * @return answer.
+     * @throws ObjectNotFoundException Exception is thrown if sought-for answer not found.
      */
-    public Answer getAnswer(int answerId) {
+    public Answer getAnswer(int answerId) throws ObjectNotFoundException {
         for (Answer answer : Repository.getAnswers()) {
             if (answer.getId() == answerId) {
                 return answer;
             }
         }
-        return null;
+        throw new ObjectNotFoundException("Such answer not found!!!");
     }
 
     /**
@@ -176,7 +179,7 @@ public class TestController {
     public List<Answer> getCorrectAnswersToQuestion(int questionId) {
         return getAnswerVariants(questionId)
                 .stream()
-                .filter(answer -> answer.isCorrect())
+                .filter(Answer::isCorrect)
                 .collect(Collectors.toList());
     }
 

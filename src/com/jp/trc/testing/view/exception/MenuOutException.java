@@ -1,4 +1,4 @@
-package com.jp.trc.testing.view.menu;
+package com.jp.trc.testing.view.exception;
 
 /**
  * Exception is thrown if enter a menu item that does not exist.

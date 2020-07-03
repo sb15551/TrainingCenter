@@ -1,6 +1,6 @@
 package com.jp.trc.testing.view.input;
 
-import com.jp.trc.testing.view.menu.MenuOutException;
+import com.jp.trc.testing.view.exception.MenuOutException;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class InputValidator implements Input {
      * Entering the response number when passing the test.
      * @param question Keyboard input hint.
      * @param size Size menu.
-     * @return
+     * @return Menu item numbers.
      */
     @Override
     public int[] askNumberAnswer(String question, int size) {
