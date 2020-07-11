@@ -1,5 +1,7 @@
 package com.jp.trc.testing.view.input;
 
+import com.jp.trc.testing.view.exception.MenuOutException;
+
 import java.util.List;
 
 /**
@@ -23,6 +25,17 @@ public interface Input {
      * @return Menu item number.
      */
     int ask(String question, List<Integer> range);
+
+    /**
+     * Validates keyboard input for subMenu.
+     * @param question Keyboard input hint.
+     * @param sizeMenu Size menu.
+     * @param amountPage Amount page for subMenu.
+     * @return Menu item value.
+     * @throws MenuOutException Thrown out if the entered value does not fall into the menu dimension.
+     * @throws NumberFormatException Thrown out if the entered value is not a number.
+     */
+    String askSubMenu(String question, int sizeMenu, int amountPage) throws MenuOutException, NumberFormatException;
 
     /**
      * Entering the response number when passing the test.

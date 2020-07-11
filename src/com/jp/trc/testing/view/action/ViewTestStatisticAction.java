@@ -97,7 +97,8 @@ public class ViewTestStatisticAction implements UserAction {
                 System.out.println("Процент правильных ответов: "
                         + testController.calculateTestResult(user.getId(), testId));
             }
-
+            subMenu = new SubMenu(user, this.getClass().getSimpleName());
+            subMenu.show();
         }
     }
 

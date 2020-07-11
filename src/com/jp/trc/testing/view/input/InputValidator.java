@@ -45,9 +45,33 @@ public class InputValidator implements Input {
                 value = this.input.ask(question, range);
                 invalid = false;
             } catch (MenuOutException moe) {
-                System.out.println("Введите ключ из диапазона меню");
+                System.out.println(moe.getMessage());
             } catch (NumberFormatException nfe) {
                 System.out.println("Введите корректные данные");
+            }
+        } while (invalid);
+        return value;
+    }
+
+    /**
+     * Validates keyboard input for subMenu.
+     * @param question Keyboard input hint.
+     * @param sizeMenu Size menu.
+     * @param amountPage Amount page for subMenu.
+     * @return Menu item value.
+     */
+    @Override
+    public String askSubMenu(String question, int sizeMenu, int amountPage) {
+        boolean invalid = true;
+        String value = "";
+        do {
+            try {
+                value = this.input.askSubMenu(question, sizeMenu, amountPage);
+                invalid = false;
+            } catch (MenuOutException moe) {
+                System.out.println(moe.getMessage());
+            } catch (NumberFormatException nfe) {
+                System.out.println(nfe.getMessage());
             }
         } while (invalid);
         return value;

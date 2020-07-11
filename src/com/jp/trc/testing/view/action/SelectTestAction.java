@@ -84,6 +84,7 @@ public class SelectTestAction implements UserAction {
      * Method for test begin.
      */
     private void beginTest(User user) {
+        System.out.println(testController.getTest(testId).getTitle());
         int number = 1;
         for (Question question : testController.getTestQuestions(testId)) {
             List<Answer> answers = testController.getAnswerVariants(question.getId());

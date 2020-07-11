@@ -66,7 +66,7 @@ public class TestClass {
         int testId = 0;
         for (User user : Repository.getUsers().values()) {
             if (user instanceof Teacher) {
-                for (int i = 0; i < random.nextInt(5) + 1; i++) {
+                for (int i = 0; i < random.nextInt(55) + 1; i++) {
                     Repository.addTest(new Test(
                             testId,
                             "Test " + testId,
@@ -97,12 +97,13 @@ public class TestClass {
         //Adding a test assignment
         for (User user : Repository.getUsers().values()) {
             if (user instanceof Student) {
-                for (int i = 0; i < random.nextInt(5) + 3; i++) {
-                    Repository.addAssignment(new Assignment(
+                for (int i = 0; i < random.nextInt(35) + 5; i++) {
+                    Assignment assignment = new Assignment(
                             user.getId(),
                             random.nextInt(Repository.getTests().size()) + 1,
                             null
-                    ));
+                    );
+                    Repository.addAssignment(assignment);
                     userController.calculateStudentRating(user.getId()); // Calculating student rating
                 }
             }
