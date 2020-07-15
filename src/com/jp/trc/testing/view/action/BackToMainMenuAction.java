@@ -1,7 +1,6 @@
 package com.jp.trc.testing.view.action;
 
 import com.jp.trc.testing.model.users.User;
-import com.jp.trc.testing.view.menu.Menu;
 
 /**
  * Back to the main menu.
@@ -16,6 +15,6 @@ public class BackToMainMenuAction implements UserAction {
      */
     @Override
     public void execute(User user) {
-        new Menu(user).show();
+        return;
     }
 }

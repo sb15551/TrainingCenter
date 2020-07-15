@@ -73,6 +73,8 @@ public class ConsoleInput implements Input {
             } else {
                 throw new MenuOutException("Такой страницы не существует");
             }
+        } else if (item.matches("^s\\s+.+")) {
+            return item;
         } else {
             throw new NumberFormatException("Введите корректные данные");
         }

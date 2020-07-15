@@ -6,6 +6,7 @@ import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.action.*;
+import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 import com.jp.trc.testing.view.input.ConsoleInput;
 import com.jp.trc.testing.view.input.Input;
 import com.jp.trc.testing.view.input.InputValidator;
@@ -102,6 +103,20 @@ public class SubMenu {
             } else {
                 show(key);
             }
+        } else if (key.matches("^s\\s+.+")) {
+            String phrase = key.replaceFirst("s\\s+", "");
+            ArrayList<ItemMenu> searchSubMenuItems = new ArrayList<>();
+            try {
+                searchSubMenuItems.addAll(
+                        additionalMenu.search(user, phrase, submenuItems)
+                );
+            } catch (ObjectNotFoundException onfe) {
+                System.out.println(onfe.getMessage());
+                show();
+            }
+            pagesWithSubMenuItem = additionalMenu.createPagination(searchSubMenuItems);
+            show();
+
         }
         System.out.println();
     }
@@ -207,7 +222,8 @@ public class SubMenu {
                     new ViewTestStatisticAction(test.getId())
             ));
         }
-        pagesWithSubMenuItem = new AdditionalMenu().createPagination(submenuItems);
+        additionalMenu = new AdditionalMenu();
+        pagesWithSubMenuItem = additionalMenu.createPagination(submenuItems);
     }
 
     /**
@@ -222,7 +238,8 @@ public class SubMenu {
                     new SelectTestAction(test.getId())
             ));
         }
-        pagesWithSubMenuItem = new AdditionalMenu().createPagination(submenuItems);
+        additionalMenu = new AdditionalMenu();
+        pagesWithSubMenuItem = additionalMenu.createPagination(submenuItems);
     }
 
     /**
@@ -236,5 +253,7 @@ public class SubMenu {
                     new ViewRatingByGroupAction(group.getId())
             ));
         }
+        additionalMenu = new AdditionalMenu();
+        pagesWithSubMenuItem = additionalMenu.createPagination(submenuItems);
     }
 }

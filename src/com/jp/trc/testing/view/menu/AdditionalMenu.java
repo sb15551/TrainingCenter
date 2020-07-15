@@ -1,7 +1,20 @@
 package com.jp.trc.testing.view.menu;
 
+import com.jp.trc.testing.controller.TestController;
+import com.jp.trc.testing.controller.UserController;
+import com.jp.trc.testing.model.tests.Answer;
+import com.jp.trc.testing.model.tests.Question;
+import com.jp.trc.testing.model.tests.Test;
+import com.jp.trc.testing.model.users.Admin;
+import com.jp.trc.testing.model.users.Student;
+import com.jp.trc.testing.model.users.Teacher;
+import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.exception.ObjectNotFoundException;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Create additional menu.
@@ -41,5 +54,59 @@ public class AdditionalMenu {
         }
 
         return menuItems;
+    }
+
+    public List<ItemMenu> search(User user, String phrase, List<ItemMenu> subMenuItems)
+            throws ObjectNotFoundException {
+        List<ItemMenu> resultSearch;
+
+        if (user instanceof Student) {
+            resultSearch = new ArrayList<>(searchTest(user, phrase, subMenuItems));
+        } else {
+            resultSearch = new ArrayList<>(searchUser(phrase, subMenuItems));
+        }
+
+        if (resultSearch.size() == 0) {
+            throw new ObjectNotFoundException("Поиск не дал результатов!");
+        } else {
+            return resultSearch;
+        }
+    }
+
+    private List<ItemMenu> searchTest(User user, String phrase, List<ItemMenu> subMenuItems)
+            throws ObjectNotFoundException {
+        List<ItemMenu> resultSearch = new ArrayList<>();
+        TestController testController = new TestController();
+
+        for (ItemMenu itemMenu : subMenuItems) {
+            StringBuilder text = new StringBuilder();
+            for (Test test : testController.getTestsForStudent(user.getId())) {
+                if (itemMenu.getItemName().equals(test.getTitle())) {
+                    text.append(test.getTitle()).append(" ");
+                    for (Question question : testController.getTestQuestions(test.getId())) {
+                        text.append(question.getQuery()).append(" ");
+                        for (Answer answer : testController.getAnswerVariants(question.getId())) {
+                            text.append(answer.getTitle()).append(" ");
+                        }
+                    }
+                }
+            }
+            if (text.toString().contains(phrase)) {
+                resultSearch.add(itemMenu);
+            }
+        }
+        return resultSearch;
+    }
+
+    private List<ItemMenu> searchUser(String phrase, List<ItemMenu> subMenuItems)
+            throws ObjectNotFoundException {
+        List<ItemMenu> resultSearch = new ArrayList<>();
+
+        for (ItemMenu itemMenu : subMenuItems) {
+            if (itemMenu.getItemName().contains(phrase)) {
+                resultSearch.add(itemMenu);
+            }
+        }
+        return resultSearch;
     }
 }
