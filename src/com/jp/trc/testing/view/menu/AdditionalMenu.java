@@ -1,20 +1,16 @@
 package com.jp.trc.testing.view.menu;
 
 import com.jp.trc.testing.controller.TestController;
-import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.tests.Question;
 import com.jp.trc.testing.model.tests.Test;
-import com.jp.trc.testing.model.users.Admin;
 import com.jp.trc.testing.model.users.Student;
-import com.jp.trc.testing.model.users.Teacher;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Create additional menu.
@@ -56,6 +52,14 @@ public class AdditionalMenu {
         return menuItems;
     }
 
+    /**
+     * Searches and creates a new submenu.
+     * @param user User for whom the search is being performed.
+     * @param phrase Searched phrase.
+     * @param subMenuItems The submenu from which the search was called.
+     * @return New submenu.
+     * @throws ObjectNotFoundException Thrown out if the search did not return any results.
+     */
     public List<ItemMenu> search(User user, String phrase, List<ItemMenu> subMenuItems)
             throws ObjectNotFoundException {
         List<ItemMenu> resultSearch;

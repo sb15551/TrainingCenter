@@ -42,6 +42,26 @@ public class UserController {
     }
 
     /**
+     * Get user by id.
+     * @param userId Sought-for user id.
+     * @return user by id.
+     * @throws ObjectNotFoundException Exception is thrown if sought-for user not found.
+     */
+    public User getUser(int userId) throws ObjectNotFoundException {
+        User searchedUser = null;
+        for (User user : Repository.getUsers().values()) {
+            if (user.getId() == userId) {
+                searchedUser = user;
+            }
+        }
+        if (searchedUser == null) {
+            throw new ObjectNotFoundException("Such user not found!!!");
+        } else {
+            return searchedUser;
+        }
+    }
+
+    /**
      * Does such a login exist in the database.
      * @param login Login to check.
      * @return true if login is finded.
@@ -86,7 +106,61 @@ public class UserController {
         student.setRating(rating);
     }
 
+    /**
+     * Get list groups.
+     * @return List<Group> list groups.
+     */
     public List<Group> getGroups() {
         return Repository.getGroups();
+    }
+
+    /**
+     * Get group by id.
+     * @param groupId Group id.
+     * @return
+     */
+    public Group getGroup(int groupId) {
+        Group group = Repository.getGroup(groupId);
+        if (group == null) {
+            throw new ObjectNotFoundException("Such group not found!!!");
+        } else {
+            return group;
+        }
+
+    }
+
+    /**
+     * Get list students in group.
+     * @param groupId Group ID.
+     * @return List student group.
+     */
+    public List<Student> getGroupStudents(int groupId) {
+        if (Repository.getGroup(groupId) == null) {
+            throw new ObjectNotFoundException("Such group not found!!!");
+        }
+
+        List<Student> students = new ArrayList(
+                getAllUsers().stream()
+                        .filter(u -> u instanceof Student
+                                && ((Student) u).getGroupId() == groupId)
+                        .collect(Collectors.toList())
+        );
+        if (students.size() == 0) {
+            throw new ObjectNotFoundException("Group is empty!!!");
+        } else {
+            return students;
+        }
+    }
+
+    /**
+     * Get list all students.
+     * @return list all students.
+     */
+    public List<Student> getAllStudents() {
+        return new ArrayList(
+                getAllUsers().stream()
+                        .filter(u -> u instanceof Student)
+                        .collect(Collectors.toList())
+        );
     }
 }

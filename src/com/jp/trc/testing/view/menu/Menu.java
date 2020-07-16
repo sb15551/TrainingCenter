@@ -84,19 +84,9 @@ public class Menu {
         ));
 
         menuItems.add(new ItemMenu(
-                "Посмотреть свои тесты",
-                "Teacher",
-                new ViewYourTestsAction()
-        ));
-        menuItems.add(new ItemMenu(
                 "Посмотреть результаты своих тестов",
                 "Teacher",
                 new ViewTestsResultAction()
-        ));
-        menuItems.add(new ItemMenu(
-                "Посмотреть рейтинг студентов",
-                "Teacher",
-                new ViewRatingsAction()
         ));
         menuItems.add(new ItemMenu(
                 "Посмотреть рейтинг студентов по группам",

@@ -123,18 +123,14 @@ public class TestController {
 
     /**
      * Tests results which compiled teacher.
-     * @param teacherId Teacher id who compiled tests.
+     * @param testId Test id, result which to need get.
      * @return Test results for each student.
      */
-    public List<Assignment> getResultTests(int teacherId) {
+    public List<Assignment> getResultTests(int testId) {
         List<Assignment> assignments = new ArrayList<>();
-        for (Test test : Repository.getTests()) {
-            if (test.getAuthor().getId() == teacherId) {
-                for (Assignment assignment : Repository.getAssignments()) {
-                    if (assignment.getTestId() == test.getId()) {
-                        assignments.add(assignment);
-                    }
-                }
+        for (Assignment assignment : Repository.getAssignments()) {
+            if (assignment.getTestId() == testId) {
+                assignments.add(assignment);
             }
         }
         return assignments;

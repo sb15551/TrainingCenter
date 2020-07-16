@@ -111,9 +111,10 @@ public class SubMenu {
                 );
             } catch (ObjectNotFoundException onfe) {
                 System.out.println(onfe.getMessage());
-                show();
             }
-            pagesWithSubMenuItem = additionalMenu.createPagination(searchSubMenuItems);
+            pagesWithSubMenuItem = additionalMenu.createPagination(searchSubMenuItems.size() != 0
+                    ? searchSubMenuItems
+                    : subMenuItems);
             show();
 
         }
