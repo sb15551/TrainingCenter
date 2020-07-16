@@ -75,12 +75,12 @@ public class Menu {
         menuItems.add(new ItemMenu(
                 "Выбрать тест для прохождения",
                 "Student",
-                new SelectTestAction(user)
+                new SelectTestAction()
         ));
         menuItems.add(new ItemMenu(
                 "Статистика тестов",
                 "Student",
-                new ViewTestStatisticAction(user)
+                new ViewTestStatisticAction()
         ));
 
         menuItems.add(new ItemMenu(
@@ -101,7 +101,7 @@ public class Menu {
         menuItems.add(new ItemMenu(
                 "Посмотреть рейтинг студентов по группам",
                 "Teacher",
-                new ViewRatingByGroupAction(user)
+                new ViewRatingByGroupAction()
         ));
 
         menuItems.add(new ItemMenu(

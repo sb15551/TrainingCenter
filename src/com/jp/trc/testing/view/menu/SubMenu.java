@@ -1,9 +1,5 @@
 package com.jp.trc.testing.view.menu;
 
-import com.jp.trc.testing.controller.TestController;
-import com.jp.trc.testing.model.Repository;
-import com.jp.trc.testing.model.tests.Test;
-import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.action.*;
 import com.jp.trc.testing.view.exception.ObjectNotFoundException;
@@ -24,7 +20,7 @@ public class SubMenu {
     /**
      * List submenu items.
      */
-    private List<ItemMenu> submenuItems = new ArrayList<>();
+    private List<ItemMenu> subMenuItems = new ArrayList<>();
 
     /**
      * Pages and elements on these pages.
@@ -62,16 +58,19 @@ public class SubMenu {
      * @param user Authorized user for whom the menu is formed.
      * @param nameMenu The menu item for which you want to create a submenu.
      */
-    public SubMenu(User user, String nameMenu) {
+    public SubMenu(User user, String nameMenu, List<ItemMenu> subMenuItems) {
         this.user = user;
-        subMenuName = createSubMenu(nameMenu);
+        subMenuName = nameMenu;
+        this.subMenuItems = subMenuItems;
+        additionalMenu = new AdditionalMenu();
+        pagesWithSubMenuItem = additionalMenu.createPagination(subMenuItems);
     }
 
     /**
      * Displays a submenu.
      * @param page Page number to display. If the "page" array is empty, the first page is displayed.
      */
-    public void show(String ... page) {
+    public void show(String... page) {
         if (page.length == 0)
             buildSubMenu();
         else
@@ -108,7 +107,7 @@ public class SubMenu {
             ArrayList<ItemMenu> searchSubMenuItems = new ArrayList<>();
             try {
                 searchSubMenuItems.addAll(
-                        additionalMenu.search(user, phrase, submenuItems)
+                        additionalMenu.search(user, phrase, subMenuItems)
                 );
             } catch (ObjectNotFoundException onfe) {
                 System.out.println(onfe.getMessage());
@@ -124,7 +123,7 @@ public class SubMenu {
     /**
      * Building submenu and creating list actions.
      */
-    private void buildSubMenu(String ... page) {
+    private void buildSubMenu(String... page) {
         List<ItemMenu> subMenu = new ArrayList<ItemMenu>();
         List<ItemMenu> subMenuItemsOnPage;
 
@@ -156,10 +155,10 @@ public class SubMenu {
      * Displays the menu on the screen so that the exit button is at the bottom.
      * @param submenu List SubMenu.
      */
-    private void printMenu(List<ItemMenu> submenu, String ... page) {
+    private void printMenu(List<ItemMenu> submenu, String... page) {
         System.out.println("\n\t" + subMenuName);
         String numberPage = "1";
-        if (pagesWithSubMenuItem.size() > 1){
+        if (pagesWithSubMenuItem.size() > 1) {
             numberPage = page[0].equals("p0") ? "all" : page[0].replaceAll("p", "");
             System.out.printf("--------------------- Page %s ---------------------\n", numberPage);
         }
@@ -178,8 +177,8 @@ public class SubMenu {
             }
             pages.append(0);
             System.out.printf(
-                    "\tp. %s (Введите \"p\" и номер нужной страницы для ее отображения. " +
-                            "\"p0\" вернет весь список)\n",
+                    "\tp. %s (Введите \"p\" и номер нужной страницы для ее отображения. "
+                            + "\"p0\" вернет весь список)\n",
                     pages.toString()
                     );
         }
@@ -187,73 +186,5 @@ public class SubMenu {
         System.out.println(
                 "\ts. (Чтобы выполнить поиск введите \"s \" и искомую фразу)\n"
         );
-    }
-
-    /**
-     * Creates a submenu for a specific menu item.
-     * @param nameMenu Menu item for which a submenu is created.
-     * @return Returns the name of the submenu.
-     */
-    private String createSubMenu(String nameMenu) {
-        if (nameMenu.equals("ViewRatingByGroupAction")) {
-            createSubMenuForGroup();
-            return "РЕЙТИНГ СТУДЕНТОВ ПО ГРУППАМ";
-        }
-        if (nameMenu.equals("SelectTestAction")) {
-            createSubMenuForTests();
-            return "ВЫБОР ТЕСТА ДЛЯ ПРОХОЖДЕНИЯ";
-        }
-        if (nameMenu.equals("ViewTestStatisticAction")) {
-            createSubMenuForStatisticsTests();
-            return "ВЫБОР ТЕСТА ДЛЯ ПРОСМОТРА СТАТИСТИКИ";
-        }
-        return null;
-    }
-
-    /**
-     * Create a submenu to display test statistics.
-     */
-    private void createSubMenuForStatisticsTests() {
-        TestController controller = new TestController();
-        for (Test test : controller.getTestsForStudent(user.getId())) {
-            submenuItems.add(new ItemMenu(
-                    test.getTitle(),
-                    user.getClass().getSimpleName(),
-                    new ViewTestStatisticAction(test.getId())
-            ));
-        }
-        additionalMenu = new AdditionalMenu();
-        pagesWithSubMenuItem = additionalMenu.createPagination(submenuItems);
-    }
-
-    /**
-     * Creating submenu for tests.
-     */
-    private void createSubMenuForTests() {
-        TestController controller = new TestController();
-        for (Test test : controller.getTestsForStudent(user.getId())) {
-            submenuItems.add(new ItemMenu(
-                    test.getTitle(),
-                    user.getClass().getSimpleName(),
-                    new SelectTestAction(test.getId())
-            ));
-        }
-        additionalMenu = new AdditionalMenu();
-        pagesWithSubMenuItem = additionalMenu.createPagination(submenuItems);
-    }
-
-    /**
-     * Creating submenu for groups.
-     */
-    private void createSubMenuForGroup() {
-        for (Group group : Repository.getGroups()) {
-            submenuItems.add(new ItemMenu(
-                    group.getTitle(),
-                    user.getClass().getSimpleName(),
-                    new ViewRatingByGroupAction(group.getId())
-            ));
-        }
-        additionalMenu = new AdditionalMenu();
-        pagesWithSubMenuItem = additionalMenu.createPagination(submenuItems);
     }
 }

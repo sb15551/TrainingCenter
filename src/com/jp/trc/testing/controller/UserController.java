@@ -2,6 +2,7 @@ package com.jp.trc.testing.controller;
 
 import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.tests.Assignment;
+import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.exception.LoginExistsException;
@@ -83,5 +84,9 @@ public class UserController {
         rating /= testsStudent.size();
         Student student = (Student) Repository.getUser(studentId);
         student.setRating(rating);
+    }
+
+    public List<Group> getGroups() {
+        return Repository.getGroups();
     }
 }

@@ -35,7 +35,8 @@ public interface Input {
      * @throws MenuOutException Thrown out if the entered value does not fall into the menu dimension.
      * @throws NumberFormatException Thrown out if the entered value is not a number.
      */
-    String askSubMenu(String question, int sizeMenu, int amountPage) throws MenuOutException, NumberFormatException;
+    String askSubMenu(String question, int sizeMenu, int amountPage)
+            throws MenuOutException, NumberFormatException;
 
     /**
      * Entering the response number when passing the test.

@@ -4,13 +4,16 @@ import com.jp.trc.testing.controller.TestController;
 import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.tests.Question;
+import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.input.ConsoleInput;
 import com.jp.trc.testing.view.input.Input;
 import com.jp.trc.testing.view.input.InputValidator;
+import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 import com.jp.trc.testing.view.menu.AnswersMenu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,11 +49,10 @@ public class SelectTestAction implements UserAction {
     private UserController userController = new UserController();
 
     /**
+     * Default constructor.
      * Constructor for creating a object.
-     * Called to form a submenu.
      */
-    public SelectTestAction(User user) {
-        subMenu = new SubMenu(user, this.getClass().getSimpleName());
+    public SelectTestAction() {
     }
 
     /**
@@ -69,6 +71,7 @@ public class SelectTestAction implements UserAction {
     @Override
     public void execute(User user) {
         if (testId == 0) {
+            subMenu = new SubMenu(user, "ВЫБОР ТЕСТА ДЛЯ ПРОХОЖДЕНИЯ", createSubMenu(user));
             subMenu.show();
         } else {
             userController = new UserController();
@@ -112,5 +115,23 @@ public class SelectTestAction implements UserAction {
         System.out.printf("Результат теста: %s", resultTest);
         testController.getAssignment(user.getId(), testId).setResult(resultTest);
         userController.calculateStudentRating(user.getId());
+    }
+
+    /**
+     * Creating submenu.
+     * @param user User for which the submenu is being created.
+     * @return List<ItemMenu>
+     */
+    private List<ItemMenu> createSubMenu(User user) {
+        TestController controller = new TestController();
+        List<ItemMenu> submenuItems = new ArrayList<>();
+        for (Test test : controller.getTestsForStudent(user.getId())) {
+            submenuItems.add(new ItemMenu(
+                    test.getTitle(),
+                    user.getClass().getSimpleName(),
+                    new SelectTestAction(test.getId())
+            ));
+        }
+        return submenuItems;
     }
 }

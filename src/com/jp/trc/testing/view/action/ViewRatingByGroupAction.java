@@ -1,8 +1,12 @@
 package com.jp.trc.testing.view.action;
 
+import com.jp.trc.testing.controller.TestController;
 import com.jp.trc.testing.controller.UserController;
+import com.jp.trc.testing.model.Repository;
+import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
 import java.util.ArrayList;
@@ -27,10 +31,11 @@ public class ViewRatingByGroupAction implements UserAction {
     private SubMenu subMenu;
 
     /**
+     * Default constructor.
      * Constructor for creating a object.
      */
-    public ViewRatingByGroupAction(User user) {
-        subMenu = new SubMenu(user, this.getClass().getSimpleName());
+    public ViewRatingByGroupAction() {
+
     }
 
     /**
@@ -48,6 +53,7 @@ public class ViewRatingByGroupAction implements UserAction {
     @Override
     public void execute(User user) {
         if (groupId == 0) {
+            subMenu = new SubMenu(user, "РЕЙТИНГ СТУДЕНТОВ ПО ГРУППАМ", createSubMenu(user));
             subMenu.show();
         } else {
             List<User> users = new UserController().getAllUsers();
@@ -60,5 +66,24 @@ public class ViewRatingByGroupAction implements UserAction {
             ViewRatingsAction.sortStudetns(students);
             students.forEach(System.out::println);
         }
+    }
+
+    /**
+     * Creating submenu.
+     * @param user User for which the submenu is being created.
+     * @return List<ItemMenu>
+     */
+    private List<ItemMenu> createSubMenu(User user) {
+        UserController controller = new UserController();
+        List<ItemMenu> subMenuItems = new ArrayList<>();
+
+        for (Group group : controller.getGroups()) {
+            subMenuItems.add(new ItemMenu(
+                    group.getTitle(),
+                    user.getClass().getSimpleName(),
+                    new ViewRatingByGroupAction(group.getId())
+            ));
+        }
+        return subMenuItems;
     }
 }

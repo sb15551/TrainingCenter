@@ -5,8 +5,10 @@ import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.tests.Question;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,11 +35,11 @@ public class ViewTestStatisticAction implements UserAction {
     private TestController testController = new TestController();
 
     /**
-     * Constructor for initializing and displaying the menu.
-     * @param user User for whom need to display the menu.
+     * Default constructor.
+     * Constructor for creating a object.
      */
-    public ViewTestStatisticAction(User user) {
-        subMenu = new SubMenu(user, this.getClass().getSimpleName());
+    public ViewTestStatisticAction() {
+
     }
 
     /**
@@ -56,6 +58,7 @@ public class ViewTestStatisticAction implements UserAction {
     @Override
     public void execute(User user) {
         if (testId == 0) {
+            subMenu = new SubMenu(user, "ВЫБОР ТЕСТА ДЛЯ ПРОСМОТРА СТАТИСТИКИ", createSubMenu(user));
             subMenu.show();
         } else {
             Test test = testController.getTest(testId);
@@ -97,7 +100,7 @@ public class ViewTestStatisticAction implements UserAction {
                 System.out.println("Процент правильных ответов: "
                         + testController.calculateTestResult(user.getId(), testId));
             }
-            subMenu = new SubMenu(user, this.getClass().getSimpleName());
+            subMenu = new SubMenu(user, "ВЫБОР ТЕСТА ДЛЯ ПРОСМОТРА СТАТИСТИКИ", createSubMenu(user));
             subMenu.show();
         }
     }
@@ -118,5 +121,23 @@ public class ViewTestStatisticAction implements UserAction {
             resultQuestion = "Вопрос пропущен";
         }
         return resultQuestion;
+    }
+
+    /**
+     * Creating submenu.
+     * @param user User for which the submenu is being created.
+     * @return List<ItemMenu>
+     */
+    private List<ItemMenu> createSubMenu(User user) {
+        TestController controller = new TestController();
+        List<ItemMenu> subMenuItems = new ArrayList<>();
+        for (Test test : controller.getTestsForStudent(user.getId())) {
+            subMenuItems.add(new ItemMenu(
+                    test.getTitle(),
+                    user.getClass().getSimpleName(),
+                    new ViewTestStatisticAction(test.getId())
+            ));
+        }
+        return subMenuItems;
     }
 }
