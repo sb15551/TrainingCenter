@@ -7,9 +7,7 @@ import com.jp.trc.testing.view.input.ConsoleInput;
 import com.jp.trc.testing.view.input.Input;
 import com.jp.trc.testing.view.input.InputValidator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Surkov Aleksey (stibium128@gmail.com)
@@ -117,6 +115,14 @@ public class SubMenu {
                     : subMenuItems);
             show();
 
+        } else if (key.matches("\\s*\\+\\s*")) {
+            Collections.sort(subMenuItems, Comparator.naturalOrder());
+            pagesWithSubMenuItem = additionalMenu.createPagination(subMenuItems);
+            show();
+        } else if (key.matches("\\s*\\-\\s*")) {
+            Collections.sort(subMenuItems, Comparator.reverseOrder());
+            pagesWithSubMenuItem = additionalMenu.createPagination(subMenuItems);
+            show();
         }
         System.out.println();
     }
@@ -186,6 +192,7 @@ public class SubMenu {
 
         System.out.println(
                 "\ts. (Чтобы выполнить поиск введите \"s \" и искомую фразу)\n"
+                + "\tНажмите \"+\" или \"-\" чтобы осортировать в алфавитном порядке"
         );
     }
 }

@@ -90,7 +90,11 @@ public class TestClass {
         int answerId = 0;
         for (Question question : Repository.getQuestions()) {
             for (int i = 0; i < 5; i++) {
-                Repository.addAnswer(new Answer(answerId++, question.getId(), "Answer " + i, random.nextBoolean()));
+                Repository.addAnswer(new Answer(
+                        answerId++,
+                        question.getId(),
+                        "Answer " + i, random.nextBoolean()
+                ));
             }
         }
 

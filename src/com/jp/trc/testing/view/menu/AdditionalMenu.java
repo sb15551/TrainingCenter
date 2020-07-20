@@ -8,9 +8,7 @@ import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Create additional menu.
@@ -72,9 +70,8 @@ public class AdditionalMenu {
 
         if (resultSearch.size() == 0) {
             throw new ObjectNotFoundException("Поиск не дал результатов!");
-        } else {
-            return resultSearch;
         }
+        return resultSearch;
     }
 
     private List<ItemMenu> searchTest(User user, String phrase, List<ItemMenu> subMenuItems)

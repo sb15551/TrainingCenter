@@ -7,7 +7,7 @@ import com.jp.trc.testing.view.action.UserAction;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public class ItemMenu {
+public class ItemMenu implements Comparable<ItemMenu> {
 
     /**
      * Name menu item.
@@ -105,5 +105,10 @@ public class ItemMenu {
     @Override
     public String toString() {
         return String.format("%s. %s", key, itemName);
+    }
+
+    @Override
+    public int compareTo(ItemMenu o) {
+        return this.itemName.compareTo(o.getItemName());
     }
 }
