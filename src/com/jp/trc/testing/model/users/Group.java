@@ -5,7 +5,7 @@ package com.jp.trc.testing.model.users;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 03.06.2020 8:28
  */
-public class Group {
+public class Group implements Comparable<Group> {
 
     /**
      * Group id.
@@ -61,5 +61,19 @@ public class Group {
     @Override
     public String toString() {
         return title;
+    }
+
+    /**
+     * Compares this object with the specified object for order. Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     *         is less than, equal to, or greater than the specified object.
+     */
+    @Override
+    public int compareTo(Group o) {
+        return this.title.compareTo(o.getTitle());
     }
 }

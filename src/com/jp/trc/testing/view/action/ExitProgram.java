@@ -14,7 +14,7 @@ public class ExitProgram implements UserAction {
      * @param user The user of this institution for whom the action is performed.
      */
     @Override
-    public void execute(User user) {
+    public void execute(User user, int page) {
         System.exit(0);
     }
 }

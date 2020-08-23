@@ -114,7 +114,7 @@ public class Menu {
      */
     public void select(int key) {
         System.out.println();
-        this.action.get(key).execute(user);
+        this.action.get(key).execute(user, 1);
         System.out.println();
     }
 

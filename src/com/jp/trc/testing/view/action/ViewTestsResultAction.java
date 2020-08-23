@@ -9,6 +9,8 @@ import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ import java.util.List;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 16.06.2020 20:34
  */
-public class ViewTestsResultAction implements UserAction {
+public class ViewTestsResultAction implements UserAction, SubMenuForTeacher {
 
     /**
      * Test id for passing.
@@ -49,10 +51,15 @@ public class ViewTestsResultAction implements UserAction {
      * @param user The user of this institution for whom the action is performed.
      */
     @Override
-    public void execute(User user) {
+    public void execute(User user, int page) {
+        subMenu = new SubMenu(
+                user,
+                "ИНФОРМАЦИЯ О РЕЗУЛЬТАТАХ СВОИХ ТЕСТОВ",
+                this,
+                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+        );
         if (testId == 0) {
-            subMenu = new SubMenu(user, "ИНФОРМАЦИЯ О РЕЗУЛЬТАТАХ СВОИХ ТЕСТОВ", createSubMenu(user));
-            subMenu.show();
+            subMenu.show(page);
         } else {
             UserController userController = new UserController();
             TestController testController = new TestController();
@@ -68,22 +75,89 @@ public class ViewTestsResultAction implements UserAction {
                     testController.getTest(s.getTestId()).getTitle(),
                     s.getResult()));
 
-            subMenu = new SubMenu(user, "ИНФОРМАЦИЯ О РЕЗУЛЬТАТАХ СВОИХ ТЕСТОВ", createSubMenu(user));
-            subMenu.show();
+            subMenu.show(page);
         }
     }
 
     /**
-     * Creating submenu.
-     * @param user User for which the submenu is being created.
-     * @return List<ItemMenu>
+     * Get amount submenu pages.
+     *
+     * @param user                 User for which the submenu is being created.
+     * @param amountElementsOnPage Amount elements on page.
+     * @return amount submenu pages.
      */
-    private List<ItemMenu> createSubMenu(User user) {
+    @Override
+    public int getAmountSubmenuPages(User user, int amountElementsOnPage) {
         TestController controller = new TestController();
-        List<Test> tests = controller.getTestsByTeacher(user.getId());
+        int amountElements = (int) controller
+                .getTestsByTeacher(user.getId(), 0, amountElementsOnPage, Comparator.naturalOrder())
+                .size();
+        return (amountElements % amountElementsOnPage) == 0
+                ? amountElements / amountElementsOnPage
+                : (amountElements / amountElementsOnPage) + 1;
+    }
 
+    /**
+     * Creating submenu.
+     *
+     * @param user                 User for which the submenu is being created.
+     * @param page                 Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator           Comparator for sorting.
+     * @return List<ItemMenu> Submenu.
+     */
+    @Override
+    public List<ItemMenu> createSubMenu(User user, long page,
+                                        int amountElementsOnPage, Comparator... comparator) {
+        TestController controller = new TestController();
+        List<Test> tmp = new ArrayList<>(
+                controller.getTestsByTeacher(
+                        user.getId(),
+                        page,
+                        amountElementsOnPage,
+                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0])
+        );
+        return createItemMenu(
+                tmp,
+                user
+        );
+    }
+
+    /**
+     * Search by specified parameters and create submenu.
+     *
+     * @param user                 User for which the submenu is being created.
+     * @param phrase               Search phrase.
+     * @param page                 Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator           Comparator for sorting.
+     * @return List<ItemMenu> Ready submenu.
+     */
+    @Override
+    public List<ItemMenu> search(User user, String phrase, long page,
+                                 int amountElementsOnPage, Comparator... comparator) {
+        TestController controller = new TestController();
+        List<Test> tmp = new ArrayList<>(
+                controller.searchTest(user, phrase, page, amountElementsOnPage, comparator.length == 0 ? Comparator.naturalOrder() : comparator[0])
+        );
+        Collections.sort(tmp, comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]);
+        return createItemMenu(
+                tmp,
+                user
+        );
+    }
+
+    /**
+     * Create item menu.
+     *
+     * @param list List to create a submenu.
+     * @param user User for which the submenu is being created.
+     * @return List<ItemMenu> Submenu.
+     */
+    @Override
+    public List<ItemMenu> createItemMenu(List list, User user) {
         List<ItemMenu> submenuItems = new ArrayList<>();
-        for (Test test : tests) {
+        for (Test test : (List<Test>) list) {
             submenuItems.add(new ItemMenu(
                     test.getTitle(),
                     user.getClass().getSimpleName(),

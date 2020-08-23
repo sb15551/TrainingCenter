@@ -68,7 +68,7 @@ public class AnswersMenu {
      * @param key Menu item.
      */
     public void select(int key) {
-        this.action.get(key - 1).execute(user);
+        this.action.get(key - 1).execute(user, 1);
     }
 
     private void printMenu(List<ItemMenu> menu) {

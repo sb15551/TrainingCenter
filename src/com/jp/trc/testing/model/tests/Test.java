@@ -7,7 +7,7 @@ import com.jp.trc.testing.model.users.Teacher;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public class Test {
+public class Test implements Comparable<Test> {
 
     /**
      * Test id.
@@ -122,5 +122,19 @@ public class Test {
     @Override
     public String toString() {
         return String.format("%-20s\t|\t%-20s", title, author.getName());
+    }
+
+    /**
+     * Compares this object with the specified object for order. Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     *         is less than, equal to, or greater than the specified object.
+     */
+    @Override
+    public int compareTo(Test o) {
+        return this.title.compareTo(o.getTitle());
     }
 }

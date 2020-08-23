@@ -2,9 +2,15 @@ package com.jp.trc.testing.controller;
 
 import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.tests.*;
+import com.jp.trc.testing.model.users.Student;
+import com.jp.trc.testing.model.users.Teacher;
+import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.exception.ObjectNotFoundException;
+import com.jp.trc.testing.view.menu.SubMenu;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,11 +22,40 @@ import java.util.stream.Collectors;
 public class TestController {
 
     /**
+     * Tests compiled by a teacher.
+     * @param teacherId Teacher id who compiled tests.
+     * @param page Page number to display.
+     * @param comparator Comparator for sorting.
+     * @return Tests compiled by a teacher.
+     */
+    public List<Test> getTestsByTeacher(int teacherId, long page,
+                                        int amountElementsOnPage, Comparator comparator) {
+        List<Test> tests = Repository.getTests().stream()
+                .filter(test -> test.getAuthor().getId() == teacherId)
+                .collect(Collectors.toList());
+        Collections.sort(tests, comparator);
+
+        if (page <= 0) {
+            return tests;
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return tests.stream()
+                    .filter(test -> test.getAuthor().getId() == teacherId)
+                    .skip(offset)
+                    .limit(amountElementsOnPage)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    /**
      * List of tests available to the user.
      * @param studentId User id for which to get a list of tests.
+     * @param page Page number to display.
+     * @param comparator Comparator for sorting.
      * @return Tests available to user.
      */
-    public List<Test> getTestsForStudent(int studentId) {
+    public List<Test> getTestsForStudent(int studentId, long page,
+                                         int amountElementsOnPage, Comparator comparator) {
         List<Test> tests = new ArrayList<>();
         List<Assignment> assignments = Repository.getAssignments().stream()
                 .filter(test -> test.getStudentId() == studentId)
@@ -33,7 +68,61 @@ public class TestController {
                 }
             }
         }
-        return tests;
+        Collections.sort(tests, comparator);
+
+        if (page <= 0) {
+            return tests;
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return tests.stream()
+                    .skip(offset)
+                    .limit(amountElementsOnPage)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    /**
+     * Executing search for to the tests.
+     * @param user User for which the search is being executed.
+     * @param phrase Search phrase.
+     * @param page Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator Comparator for sorting.
+     * @return List<Test> Ready submenu.
+     */
+    public List<Test> searchTest(User user, String phrase, long page,
+                                 int amountElementsOnPage, Comparator comparator) {
+        List<Test> submenuItems = new ArrayList<>();
+        List<Test> tests = new ArrayList<>();
+        if (user instanceof Teacher) {
+            tests = getTestsByTeacher(user.getId(), 0, SubMenu.AMOUNT_ELEMENTS_ON_PAGE, comparator);
+        }
+        if (user instanceof Student) {
+            tests = getTestsForStudent(user.getId(), 0, SubMenu.AMOUNT_ELEMENTS_ON_PAGE, comparator);
+        }
+        for (Test test : tests) {
+            StringBuilder text = new StringBuilder();
+            text.append(test.getTitle()).append(" ");
+            for (Question question : getTestQuestions(test.getId())) {
+                text.append(question.getQuery()).append(" ");
+                for (Answer answer : getAnswerVariants(question.getId())) {
+                    text.append(answer.getTitle()).append(" ");
+                }
+            }
+            if (text.toString().contains(phrase)) {
+                submenuItems.add(test);
+            }
+        }
+        if (page <= 0) {
+            return submenuItems.stream()
+                    .collect(Collectors.toList());
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return submenuItems.stream()
+                    .skip(offset)
+                    .limit(amountElementsOnPage)
+                    .collect(Collectors.toList());
+        }
     }
 
     /**
@@ -108,17 +197,6 @@ public class TestController {
             }
         }
         throw new ObjectNotFoundException("Such answer not found!!!");
-    }
-
-    /**
-     * Tests compiled by a teacher.
-     * @param teacherId Teacher id who compiled tests.
-     * @return Tests compiled by a teacher.
-     */
-    public List<Test> getTestsByTeacher(int teacherId) {
-        return Repository.getTests().stream()
-                .filter(test -> test.getAuthor().getId() == teacherId)
-                .collect(Collectors.toList());
     }
 
     /**
@@ -214,12 +292,12 @@ public class TestController {
                 .collect(Collectors.toList());
     }
 
-        /**
-         * Get the incorrect answers to the specific question that the student noted.
-         * @param studentId Student who is taking the test.
-         * @param questionId Question id whose answers need to get.
-         * @return list of incorrect answers that the student noted.
-         */
+    /**
+     * Get the incorrect answers to the specific question that the student noted.
+     * @param studentId Student who is taking the test.
+     * @param questionId Question id whose answers need to get.
+     * @return list of incorrect answers that the student noted.
+     */
     public List<Answer> getIncorrectAnswersStudent(int studentId, int questionId) {
         List<Answer> incorrectAnswersStudent = new ArrayList<>();
         Repository.getAnswerToQuestions().stream()

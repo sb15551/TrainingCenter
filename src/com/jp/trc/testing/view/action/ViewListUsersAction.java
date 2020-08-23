@@ -15,41 +15,52 @@ import java.util.List;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 16.06.2020 20:35
  */
-public class ViewListUsersAction implements UserAction {
+public class ViewListUsersAction implements UserAction, SubMenuForTeacher {
 
     /**
      * Submenu with users.
      */
-    private SubMenu subMenu;
+    private static SubMenu subMenu;
+
+    /**
+     * Controller for working with users.
+     */
+    private static UserController userController = new UserController();
 
     /**
      * Lists of all users of this institution.
      * @param user The user of this institution for whom the action is performed.
      */
     @Override
-    public void execute(User user) {
-        subMenu = new SubMenu(user, "СПИСОК ВСЕХ ПОЛЬЗОВАТЕЛЕЙ СИСТЕМЫ", createSubMenu(user));
-        subMenu.show();
+    public void execute(User user, int page) {
+        subMenu = new SubMenu(
+                user,
+                "СПИСОК ВСЕХ ПОЛЬЗОВАТЕЛЕЙ СИСТЕМЫ",
+                this,
+                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+        );
+        subMenu.show(page);
     }
 
     /**
-     * Creating submenu.
+     * Create item menu.
+     *
+     * @param list List to create a submenu.
      * @param user User for which the submenu is being created.
-     * @return List<ItemMenu>
+     * @return List<ItemMenu> Submenu.
      */
-    private List<ItemMenu> createSubMenu(User user) {
-        List<ItemMenu> subMenuItems = new ArrayList<>();
-        List<User> users = new UserController().getAllUsers();
-        Collections.sort(users, Comparator.naturalOrder());
+    @Override
+    public List<ItemMenu> createItemMenu(List list, User user) {
 
-        for (User usr : users) {
+        Collections.sort(list, Comparator.naturalOrder());
+        List<ItemMenu> subMenuItems = new ArrayList<>();
+        for (User usr : (List<User>) list) {
             subMenuItems.add(new ItemMenu(
                     usr.getName(),
                     user.getClass().getSimpleName(),
                     new ViewUserInfoAction(usr)
             ));
         }
-
         return subMenuItems;
     }
 }

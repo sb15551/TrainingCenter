@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.06.2020 7:49
  */
-public class ViewTestStatisticAction implements UserAction {
+public class ViewTestStatisticAction implements UserAction, SubMenuForStudents {
 
     /**
      * Test id whose statistics need to show.
@@ -56,10 +56,15 @@ public class ViewTestStatisticAction implements UserAction {
      * @param user The user of this institution for whom the action is performed.
      */
     @Override
-    public void execute(User user) {
+    public void execute(User user, int page) {
+        subMenu = new SubMenu(
+                user,
+                "ВЫБОР ТЕСТА ДЛЯ ПРОСМОТРА СТАТИСТИКИ",
+                this,
+                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+        );
         if (testId == 0) {
-            subMenu = new SubMenu(user, "ВЫБОР ТЕСТА ДЛЯ ПРОСМОТРА СТАТИСТИКИ", createSubMenu(user));
-            subMenu.show();
+            subMenu.show(page);
         } else {
             Test test = testController.getTest(testId);
             Integer testResult = testController.getAssignment(user.getId(), testId).getResult();
@@ -100,8 +105,7 @@ public class ViewTestStatisticAction implements UserAction {
                 System.out.println("Процент правильных ответов: "
                         + testController.calculateTestResult(user.getId(), testId));
             }
-            subMenu = new SubMenu(user, "ВЫБОР ТЕСТА ДЛЯ ПРОСМОТРА СТАТИСТИКИ", createSubMenu(user));
-            subMenu.show();
+            subMenu.show(page);
         }
     }
 
@@ -124,20 +128,22 @@ public class ViewTestStatisticAction implements UserAction {
     }
 
     /**
-     * Creating submenu.
+     * Create item menu.
+     *
+     * @param list List to create a submenu.
      * @param user User for which the submenu is being created.
-     * @return List<ItemMenu>
+     * @return List<ItemMenu> Submenu.
      */
-    private List<ItemMenu> createSubMenu(User user) {
-        TestController controller = new TestController();
-        List<ItemMenu> subMenuItems = new ArrayList<>();
-        for (Test test : controller.getTestsForStudent(user.getId())) {
-            subMenuItems.add(new ItemMenu(
+    @Override
+    public List<ItemMenu> createItemMenu(List list, User user) {
+        List<ItemMenu> submenuItems = new ArrayList<>();
+        for (Test test : (List<Test>) list) {
+            submenuItems.add(new ItemMenu(
                     test.getTitle(),
                     user.getClass().getSimpleName(),
                     new ViewTestStatisticAction(test.getId())
             ));
         }
-        return subMenuItems;
+        return submenuItems;
     }
 }

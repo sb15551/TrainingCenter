@@ -21,12 +21,21 @@ import java.util.List;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 16.06.2020 21:09
  */
-public class SelectTestAction implements UserAction {
+public class SelectTestAction implements UserAction, SubMenuForStudents {
 
     /**
      * Test id for passing.
      */
     private int testId;
+
+    /**
+     * Gets testId.
+     *
+     * @return value of testId int
+     */
+    public int getTestId() {
+        return testId;
+    }
 
     /**
      * Submenu with tests.
@@ -69,10 +78,15 @@ public class SelectTestAction implements UserAction {
      * @param user The user of this institution for whom the action is performed.
      */
     @Override
-    public void execute(User user) {
+    public void execute(User user, int page) {
+        subMenu = new SubMenu(
+                user,
+                "ВЫБОР ТЕСТА ДЛЯ ПРОХОЖДЕНИЯ",
+                this,
+                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+        );
         if (testId == 0) {
-            subMenu = new SubMenu(user, "ВЫБОР ТЕСТА ДЛЯ ПРОХОЖДЕНИЯ", createSubMenu(user));
-            subMenu.show();
+            subMenu.show(page);
         } else {
             userController = new UserController();
             testController = new TestController();
@@ -118,14 +132,16 @@ public class SelectTestAction implements UserAction {
     }
 
     /**
-     * Creating submenu.
+     * Create item menu.
+     *
+     * @param list List to create a submenu.
      * @param user User for which the submenu is being created.
-     * @return List<ItemMenu>
+     * @return List<ItemMenu> Submenu.
      */
-    private List<ItemMenu> createSubMenu(User user) {
-        TestController controller = new TestController();
+    @Override
+    public List<ItemMenu> createItemMenu(List list, User user) {
         List<ItemMenu> submenuItems = new ArrayList<>();
-        for (Test test : controller.getTestsForStudent(user.getId())) {
+        for (Test test : (List<Test>) list) {
             submenuItems.add(new ItemMenu(
                     test.getTitle(),
                     user.getClass().getSimpleName(),

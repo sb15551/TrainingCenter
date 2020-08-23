@@ -2,11 +2,11 @@ package com.jp.trc.testing.view.menu;
 
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.action.*;
-import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 import com.jp.trc.testing.view.input.ConsoleInput;
 import com.jp.trc.testing.view.input.Input;
 import com.jp.trc.testing.view.input.InputValidator;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -16,14 +16,24 @@ import java.util.*;
 public class SubMenu {
 
     /**
-     * List submenu items.
+     * Amount elements on page.
      */
-    private List<ItemMenu> subMenuItems = new ArrayList<>();
+    public static final int AMOUNT_ELEMENTS_ON_PAGE = 5;
 
     /**
-     * Pages and elements on these pages.
+     * From which menu item the submenu was formed.
      */
-    private HashMap<String, List<ItemMenu>> pagesWithSubMenuItem;
+    private UserAction fromItemMenu;
+
+    /**
+     * List submenu items.
+     */
+    private List<ItemMenu> subMenuItems;
+
+    /**
+     * Amount pages.
+     */
+    int amountSubmenuPages;
 
     /**
      * Keyboard input.
@@ -46,9 +56,19 @@ public class SubMenu {
     private String subMenuName;
 
     /**
-     * Create additional menu.
+     * Current page.
      */
-    private AdditionalMenu additionalMenu;
+    private int currentPage = 1;
+
+    /**
+     * Search phrase.
+     */
+    private String searchPhrase = "";
+
+    /**
+     * Comparator for sorting.
+     */
+    private Comparator comparator = Comparator.naturalOrder();
 
     /**
      * Constructor for creating a submenu.
@@ -56,31 +76,25 @@ public class SubMenu {
      * @param user Authorized user for whom the menu is formed.
      * @param nameMenu The menu item for which you want to create a submenu.
      */
-    public SubMenu(User user, String nameMenu, List<ItemMenu> subMenuItems) {
+    public SubMenu(User user, String nameMenu, UserAction typeSubMenu, List<ItemMenu> subMenuItems) {
         this.user = user;
         subMenuName = nameMenu;
+        this.fromItemMenu = typeSubMenu;
         this.subMenuItems = subMenuItems;
-        additionalMenu = new AdditionalMenu();
-        pagesWithSubMenuItem = additionalMenu.createPagination(subMenuItems);
+        amountSubmenuPages = getAmountSubmenuPages(typeSubMenu, user);
     }
 
     /**
      * Displays a submenu.
      * @param page Page number to display. If the "page" array is empty, the first page is displayed.
      */
-    public void show(String... page) {
-        if (page.length == 0)
-            buildSubMenu();
-        else
-            buildSubMenu(page[0]);
+    public void show(int page) {
+        buildSubMenu(page);
 
         String key = input.askSubMenu(
                 "Введите пункт подменю: ",
                 this.action.size(),
-                pagesWithSubMenuItem.size() == 1
-                        ? pagesWithSubMenuItem.size()
-                        : pagesWithSubMenuItem.size() - 1
-
+                amountSubmenuPages
         );
 
         select(key);
@@ -93,36 +107,24 @@ public class SubMenu {
     public void select(String key) {
         System.out.println();
         if (key.matches("\\d+")) {
-            this.action.get(Integer.parseInt(key)).execute(user);
+            this.action.get(Integer.parseInt(key)).execute(user, currentPage);
         } else if (key.matches("^p\\s*\\d+")) {
-            if (pagesWithSubMenuItem.size() == 1) {
-                show();
-            } else {
-                show(key);
-            }
+            currentPage = Integer.parseInt(key.replaceAll("p", ""));
+            show(currentPage);
         } else if (key.matches("^s\\s+.+")) {
-            String phrase = key.replaceFirst("s\\s+", "");
-            ArrayList<ItemMenu> searchSubMenuItems = new ArrayList<>();
-            try {
-                searchSubMenuItems.addAll(
-                        additionalMenu.search(user, phrase, subMenuItems)
-                );
-            } catch (ObjectNotFoundException onfe) {
-                System.out.println(onfe.getMessage());
-            }
-            pagesWithSubMenuItem = additionalMenu.createPagination(searchSubMenuItems.size() != 0
-                    ? searchSubMenuItems
-                    : subMenuItems);
-            show();
-
+            searchPhrase = key.replaceFirst("s\\s+", "");
+            subMenuItems = search(fromItemMenu, user, 1, comparator);
+            int countElements = search(fromItemMenu, user, 0, comparator).size();
+            amountSubmenuPages = countElements % AMOUNT_ELEMENTS_ON_PAGE == 0
+                    ? countElements / AMOUNT_ELEMENTS_ON_PAGE
+                    : (countElements / AMOUNT_ELEMENTS_ON_PAGE) + 1;
+            show(1);
         } else if (key.matches("\\s*\\+\\s*")) {
-            Collections.sort(subMenuItems, Comparator.naturalOrder());
-            pagesWithSubMenuItem = additionalMenu.createPagination(subMenuItems);
-            show();
+            comparator = Comparator.naturalOrder();
+            show(1);
         } else if (key.matches("\\s*\\-\\s*")) {
-            Collections.sort(subMenuItems, Comparator.reverseOrder());
-            pagesWithSubMenuItem = additionalMenu.createPagination(subMenuItems);
-            show();
+            comparator = Comparator.reverseOrder();
+            show(1);
         }
         System.out.println();
     }
@@ -130,15 +132,13 @@ public class SubMenu {
     /**
      * Building submenu and creating list actions.
      */
-    private void buildSubMenu(String... page) {
+    private void buildSubMenu(int page) {
         List<ItemMenu> subMenu = new ArrayList<ItemMenu>();
         List<ItemMenu> subMenuItemsOnPage;
 
-        if (page.length == 0) {
-            subMenuItemsOnPage = pagesWithSubMenuItem.get("p1");
-        } else {
-            subMenuItemsOnPage = pagesWithSubMenuItem.get(page[0]);
-        }
+        subMenuItemsOnPage = searchPhrase.equals("")
+                ? getPageSubMenu(fromItemMenu, user, page, comparator)
+                : search(fromItemMenu, user, page, comparator);
 
         action = new ArrayList<>();
         subMenu.add(new ItemMenu(
@@ -155,19 +155,23 @@ public class SubMenu {
             subMenu.add(item);
         }
 
-        printMenu(subMenu, page.length == 0 ? "p1" : page[0]);
+        printMenu(subMenu, page);
     }
 
     /**
      * Displays the menu on the screen so that the exit button is at the bottom.
      * @param submenu List SubMenu.
      */
-    private void printMenu(List<ItemMenu> submenu, String... page) {
+    private void printMenu(List<ItemMenu> submenu, int page) {
         System.out.println("\n\t" + subMenuName);
         String numberPage = "1";
-        if (pagesWithSubMenuItem.size() > 1) {
-            numberPage = page[0].equals("p0") ? "all" : page[0].replaceAll("p", "");
-            System.out.printf("--------------------- Page %s ---------------------\n", numberPage);
+        if (amountSubmenuPages > 1) {
+            numberPage = page == 0 ? "all" : String.valueOf(page);
+            System.out.printf(
+                    "--------------------- Page %s%s ---------------------\n",
+                    numberPage,
+                    searchPhrase.equals("") ? "" : " (Search phrase: " + searchPhrase + ")"
+            );
         }
 
         submenu.stream().filter(itemMenu -> itemMenu.getKey() != 0)
@@ -175,10 +179,10 @@ public class SubMenu {
         submenu.stream().filter(itemMenu -> itemMenu.getKey() == 0)
                 .forEach(itemMenu -> System.out.println("\t" + itemMenu));
 
-        System.out.println("--------------------- Additional menu ---------------------");
-        if (pagesWithSubMenuItem.size() > 1) {
+        if (amountSubmenuPages > 1) {
+            System.out.println("--------------------- Additional menu ---------------------");
             StringBuilder pages = new StringBuilder();
-            for (int i = 1; i < pagesWithSubMenuItem.size(); i++) {
+            for (int i = 1; i <= amountSubmenuPages; i++) {
                 pages.append(i);
                 pages.append(" ");
             }
@@ -188,11 +192,64 @@ public class SubMenu {
                             + "\"p0\" вернет весь список)\n",
                     pages.toString()
                     );
-        }
 
-        System.out.println(
-                "\ts. (Чтобы выполнить поиск введите \"s \" и искомую фразу)\n"
-                + "\tНажмите \"+\" или \"-\" чтобы осортировать в алфавитном порядке"
-        );
+            System.out.println(
+                    "\ts. (Чтобы выполнить поиск введите \"s \" и искомую фразу)\n"
+                    + "\tВведите \"+\" или \"-\" чтобы осортировать в алфавитном порядке"
+            );
+        }
+    }
+
+    private List<ItemMenu> getPageSubMenu(UserAction clazz, User user,
+                                          long page, Comparator... comparator) {
+        Object object = null;
+        try {
+            object = clazz.getClass()
+                    .getMethod("createSubMenu", User.class, long.class,
+                            int.class, Comparator[].class)
+                    .invoke(
+                            clazz,
+                            user,
+                            page,
+                            AMOUNT_ELEMENTS_ON_PAGE,
+                            comparator.length == 0 ? Comparator.naturalOrder() : comparator
+                    );
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return object == null ? subMenuItems: (List<ItemMenu>) object;
+    }
+
+    private int getAmountSubmenuPages(UserAction clazz, User user) {
+        Object object = null;
+        try {
+            object = clazz.getClass()
+                    .getMethod("getAmountSubmenuPages", User.class, int.class)
+                    .invoke(clazz, user, AMOUNT_ELEMENTS_ON_PAGE);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return object == null ? 0: (int) object;
+    }
+
+    private List<ItemMenu> search(UserAction clazz, User user, long page,
+                                  Comparator... comparator) {
+        Object object = null;
+        try {
+            object = clazz.getClass()
+                    .getMethod("search", User.class,
+                            String.class, long.class, int.class, Comparator[].class)
+                    .invoke(
+                            clazz,
+                            user,
+                            searchPhrase,
+                            page,
+                            AMOUNT_ELEMENTS_ON_PAGE,
+                            comparator.length == 0 ? Comparator.naturalOrder() : comparator
+                    );
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return object == null ? subMenuItems: (List<ItemMenu>) object;
     }
 }

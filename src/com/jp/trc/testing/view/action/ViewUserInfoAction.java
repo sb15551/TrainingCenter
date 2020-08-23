@@ -20,7 +20,7 @@ public class ViewUserInfoAction implements UserAction {
     }
 
     @Override
-    public void execute(User user) {
+    public void execute(User user, int page) {
         System.out.printf(
                 "Full name user: %s\n"
                 + "Login: %s\n"

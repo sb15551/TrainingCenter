@@ -10,6 +10,8 @@ import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 import com.jp.trc.testing.view.exception.VerifiesPasswordException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +24,23 @@ public class UserController {
 
     /**
      * List of all users.
-     * @return List of all users.
+     * @param page Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator Comparator for sorting.
+     * @return ist of all users.
      */
-    public List<User> getAllUsers() {
-        return new ArrayList<>(Repository.getUsers().values());
+    public List<User> getAllUsers(long page, int amountElementsOnPage, Comparator comparator) {
+        List<User> tmp = new ArrayList<>(Repository.getUsers().values());
+        Collections.sort(tmp, comparator);
+        if (page <= 0) {
+            return tmp;
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return tmp.stream()
+                    .skip(offset)
+                    .limit(amountElementsOnPage)
+                    .collect(Collectors.toList());
+        }
     }
 
     /**
@@ -108,10 +123,23 @@ public class UserController {
 
     /**
      * Get list groups.
+     * @param page Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator Comparator for sorting.
      * @return List<Group> list groups.
      */
-    public List<Group> getGroups() {
-        return Repository.getGroups();
+    public List<Group> getGroups(long page, int amountElementsOnPage, Comparator comparator) {
+        List<Group> group = Repository.getGroups();
+        Collections.sort(group, comparator);
+        if (page <= 0) {
+            return group;
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return group.stream()
+                    .skip(offset)
+                    .limit(amountElementsOnPage)
+                    .collect(Collectors.toList());
+        }
     }
 
     /**
@@ -132,19 +160,42 @@ public class UserController {
     /**
      * Get list students in group.
      * @param groupId Group ID.
+     * @param page Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator Comparator for sorting.
      * @return List student group.
      */
-    public List<Student> getGroupStudents(int groupId) {
+    public List<Student> getGroupStudents(int groupId, long page,
+                                          int amountElementsOnPage, Comparator comparator) {
+        List<Student> tmp;
+        if (groupId == 0) {
+            tmp = getAllStudents(page, amountElementsOnPage, comparator);
+            Collections.sort(tmp, comparator);
+            return tmp;
+        }
         if (Repository.getGroup(groupId) == null) {
             throw new ObjectNotFoundException("Such group not found!!!");
         }
+        List<Student> students = new ArrayList<>();
+        tmp = getAllStudents(0, amountElementsOnPage, comparator);
+        Collections.sort(tmp, comparator);
 
-        List<Student> students = new ArrayList(
-                getAllUsers().stream()
-                        .filter(u -> u instanceof Student
-                                && ((Student) u).getGroupId() == groupId)
-                        .collect(Collectors.toList())
-        );
+        if (page <= 0) {
+            students.addAll(
+                    tmp.stream()
+                            .filter(u -> u.getGroupId() == groupId)
+                            .collect(Collectors.toList())
+            );
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            students.addAll(
+                    tmp.stream()
+                            .filter(u -> u.getGroupId() == groupId)
+                            .skip(offset)
+                            .limit(amountElementsOnPage)
+                            .collect(Collectors.toList())
+            );
+        }
         if (students.size() == 0) {
             throw new ObjectNotFoundException("Group is empty!!!");
         } else {
@@ -154,13 +205,101 @@ public class UserController {
 
     /**
      * Get list all students.
+     * @param page Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator Comparator for sorting.
      * @return list all students.
      */
-    public List<Student> getAllStudents() {
-        return new ArrayList(
-                getAllUsers().stream()
-                        .filter(u -> u instanceof Student)
-                        .collect(Collectors.toList())
-        );
+    public List<Student> getAllStudents(long page, int amountElementsOnPage, Comparator comparator) {
+        List<User> tmp = getAllUsers(0, amountElementsOnPage, comparator);
+        if (page <= 0) {
+            return new ArrayList(
+                    tmp.stream()
+                            .filter(u -> u instanceof Student)
+                            .collect(Collectors.toList())
+            );
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return new ArrayList(
+                    tmp.stream()
+                            .filter(u -> u instanceof Student)
+                            .skip(offset)
+                            .limit(amountElementsOnPage)
+                            .collect(Collectors.toList())
+            );
+        }
+    }
+
+    /**
+     * Searches for a group by its name.
+     * @param phrase Search phrase.
+     * @param page Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator Comparator for sorting.
+     * @return List<Group> found groups.
+     */
+    public List<Group> searchGroup(String phrase, long page,
+                                   int amountElementsOnPage, Comparator comparator) {
+        if (page <= 0) {
+            return getGroups(0, amountElementsOnPage, comparator).stream()
+                    .filter(g -> g.getTitle().contains(phrase))
+                    .collect(Collectors.toList());
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return getGroups(0, amountElementsOnPage, comparator).stream()
+                    .filter(g -> g.getTitle().contains(phrase))
+                    .skip(offset)
+                    .limit(amountElementsOnPage)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    /**
+     * Looking for a student by group.
+     * @param groupId Group in which search student.
+     * @param phrase Search phrase.
+     * @param page Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator Comparator for sorting.
+     * @return
+     */
+    public List<Student> searchStudentInGroup(int groupId, String phrase, long page,
+                                              int amountElementsOnPage, Comparator comparator) {
+        if (page <= 0) {
+            return getGroupStudents(groupId, 0, amountElementsOnPage, comparator).stream()
+                    .filter(s -> s.getName().contains(phrase))
+                    .collect(Collectors.toList());
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return getGroupStudents(groupId, 0, amountElementsOnPage, comparator).stream()
+                    .filter(s -> s.getName().contains(phrase))
+                    .skip(offset)
+                    .limit(amountElementsOnPage)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    /**
+     * Search for a users by name.
+     * @param phrase Search phrase.
+     * @param page Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator Comparator for sorting.
+     * @return List<User> Searched users.
+     */
+    public List<User> searchUser(String phrase, long page,
+                                 int amountElementsOnPage, Comparator comparator) {
+        if (page <= 0) {
+            return getAllUsers(0, amountElementsOnPage, comparator).stream()
+                    .filter(s -> s.getName().contains(phrase))
+                    .collect(Collectors.toList());
+        } else {
+            long offset = (page - 1) * amountElementsOnPage;
+            return getAllUsers(0, amountElementsOnPage, comparator).stream()
+                    .filter(s -> s.getName().contains(phrase))
+                    .skip(offset)
+                    .limit(amountElementsOnPage)
+                    .collect(Collectors.toList());
+        }
     }
 }

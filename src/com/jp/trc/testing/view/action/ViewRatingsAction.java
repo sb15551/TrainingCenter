@@ -7,6 +7,7 @@ import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -14,7 +15,12 @@ import java.util.List;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 16.06.2020 20:35
  */
-public class ViewRatingsAction implements UserAction {
+public class ViewRatingsAction implements UserAction, SubMenuForTeacher {
+
+    /**
+     * Group id.
+     */
+    private int groupId;
 
     /**
      * Submenu with groups.
@@ -22,13 +28,31 @@ public class ViewRatingsAction implements UserAction {
     private SubMenu subMenu;
 
     /**
+     * Controller for working with users.
+     */
+    private static UserController userController = new UserController();
+
+    /**
+     * Constructor for creating a object.
+     * @param groupId
+     */
+    public ViewRatingsAction(int groupId) {
+        this.groupId = groupId;
+    }
+
+    /**
      * List of students sorted by rating.
      * @param user The user of this institution for whom the action is performed.
      */
     @Override
-    public void execute(User user) {
-        subMenu = new SubMenu(user, "ВСЕ СТУДЕНТЫ", createSubMenu(user));
-        subMenu.show();
+    public void execute(User user, int page) {
+        subMenu = new SubMenu(
+                user,
+                "ВСЕ СТУДЕНТЫ",
+                this,
+                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+        );
+        subMenu.show(page);
     }
 
     /**
@@ -48,16 +72,87 @@ public class ViewRatingsAction implements UserAction {
     }
 
     /**
-     * Creating submenu.
+     * Get amount submenu pages.
      * @param user User for which the submenu is being created.
-     * @return List<ItemMenu>
+     * @param amountElementsOnPage Amount elements on page.
+     * @return amount submenu pages.
      */
-    private List<ItemMenu> createSubMenu(User user) {
-        UserController userController = new UserController();
-        List<Student> students = userController.getAllStudents();
-        sortStudetns(students);
+    public int getAmountSubmenuPages(User user, int amountElementsOnPage) {
+        UserController controller = new UserController();
+        int amountElements = controller
+                .getGroupStudents(groupId, 0, amountElementsOnPage, Comparator.naturalOrder())
+                .size();
+        return (amountElements % amountElementsOnPage) == 0
+                ? amountElements / amountElementsOnPage
+                : (amountElements / amountElementsOnPage) + 1;
+    }
+
+    /**
+     * Creating submenu.
+     *
+     * @param user                 User for which the submenu is being created.
+     * @param page                 Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator           Comparator for sorting.
+     * @return List<ItemMenu> Submenu.
+     */
+    @Override
+    public List<ItemMenu> createSubMenu(User user, long page,
+                                        int amountElementsOnPage, Comparator... comparator) {
+        List<Student> tmp = new ArrayList<>(
+                userController.getGroupStudents(
+                        groupId,
+                        page,
+                        amountElementsOnPage,
+                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
+                )
+        );
+        return createItemMenu(
+                tmp,
+                user
+        );
+    }
+
+    /**
+     * Search by specified parameters and create submenu.
+     *
+     * @param user                 User for which the submenu is being created.
+     * @param phrase               Search phrase.
+     * @param page                 Page number to display.
+     * @param amountElementsOnPage Amount elements on page.
+     * @param comparator           Comparator for sorting.
+     * @return List<ItemMenu> Ready submenu.
+     */
+    @Override
+    public List<ItemMenu> search(User user, String phrase, long page,
+                                 int amountElementsOnPage, Comparator... comparator) {
+        List<Student> tmp = new ArrayList<>(
+                userController.searchStudentInGroup(
+                        groupId,
+                        phrase,
+                        page,
+                        amountElementsOnPage,
+                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
+                )
+        );
+        return createItemMenu(
+                tmp,
+                user
+        );
+    }
+
+    /**
+     * Create item menu.
+     *
+     * @param list List to create a submenu.
+     * @param user User for which the submenu is being created.
+     * @return List<ItemMenu> Submenu.
+     */
+    @Override
+    public List<ItemMenu> createItemMenu(List list, User user) {
+        ViewRatingsAction.sortStudetns(list);
         List<ItemMenu> submenuItems = new ArrayList<>();
-        for (Student student : students) {
+        for (Student student : (List<Student>) list) {
             submenuItems.add(new ItemMenu(
                     String.format(
                             "%s   |   Rating: %s",

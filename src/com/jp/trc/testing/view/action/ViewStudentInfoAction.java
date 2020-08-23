@@ -22,7 +22,7 @@ public class ViewStudentInfoAction implements UserAction {
     }
 
     @Override
-    public void execute(User user) {
+    public void execute(User user, int page) {
         UserController userController = new UserController();
         System.out.printf(
                 "Name: %s\n"
