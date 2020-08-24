@@ -18,6 +18,11 @@ import java.util.List;
 public class ViewRatingsAction implements UserAction, SubMenuForTeacher {
 
     /**
+     * Controller for working with users.
+     */
+    private static UserController userController = new UserController();
+
+    /**
      * Group id.
      */
     private int groupId;
@@ -26,11 +31,6 @@ public class ViewRatingsAction implements UserAction, SubMenuForTeacher {
      * Submenu with groups.
      */
     private SubMenu subMenu;
-
-    /**
-     * Controller for working with users.
-     */
-    private static UserController userController = new UserController();
 
     /**
      * Constructor for creating a object.

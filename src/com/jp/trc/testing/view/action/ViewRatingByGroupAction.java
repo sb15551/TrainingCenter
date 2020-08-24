@@ -19,6 +19,11 @@ import java.util.List;
 public class ViewRatingByGroupAction implements UserAction, SubMenuForTeacher {
 
     /**
+     * Controller for working with users.
+     */
+    private static UserController userController = new UserController();
+
+    /**
      * Group id.
      */
     private int groupId;
@@ -27,11 +32,6 @@ public class ViewRatingByGroupAction implements UserAction, SubMenuForTeacher {
      * Submenu with groups.
      */
     private SubMenu subMenu;
-
-    /**
-     * Controller for working with users.
-     */
-    private static UserController userController = new UserController();
 
     /**
      * Default constructor.
@@ -157,7 +157,7 @@ public class ViewRatingByGroupAction implements UserAction, SubMenuForTeacher {
         List<ItemMenu> subMenuItems = new ArrayList<>();
         for (Group group : (List<Group>) list) {
             subMenuItems.add(new ItemMenu(
-                    group.getTitle() ,
+                    group.getTitle(),
                     user.getClass().getSimpleName(),
                     new ViewRatingByGroupAction(group.getId())
             ));

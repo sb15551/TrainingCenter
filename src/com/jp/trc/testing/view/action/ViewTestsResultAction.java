@@ -138,7 +138,13 @@ public class ViewTestsResultAction implements UserAction, SubMenuForTeacher {
                                  int amountElementsOnPage, Comparator... comparator) {
         TestController controller = new TestController();
         List<Test> tmp = new ArrayList<>(
-                controller.searchTest(user, phrase, page, amountElementsOnPage, comparator.length == 0 ? Comparator.naturalOrder() : comparator[0])
+                controller.searchTest(
+                        user,
+                        phrase,
+                        page,
+                        amountElementsOnPage,
+                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
+                )
         );
         Collections.sort(tmp, comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]);
         return createItemMenu(

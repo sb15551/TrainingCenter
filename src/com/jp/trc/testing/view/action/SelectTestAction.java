@@ -29,15 +29,6 @@ public class SelectTestAction implements UserAction, SubMenuForStudents {
     private int testId;
 
     /**
-     * Gets testId.
-     *
-     * @return value of testId int
-     */
-    public int getTestId() {
-        return testId;
-    }
-
-    /**
      * Submenu with tests.
      */
     private SubMenu subMenu;

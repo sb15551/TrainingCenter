@@ -82,6 +82,20 @@ public class SubMenu {
     private String key;
 
     /**
+     * Constructor for creating a submenu.
+     *
+     * @param user Authorized user for whom the menu is formed.
+     * @param nameMenu The menu item for which you want to create a submenu.
+     */
+    public SubMenu(User user, String nameMenu, UserAction typeSubMenu, List<ItemMenu> subMenuItems) {
+        this.user = user;
+        subMenuName = nameMenu;
+        this.fromItemMenu = typeSubMenu;
+        this.subMenuItems = subMenuItems;
+        amountSubmenuPages = getAmountSubmenuPages(typeSubMenu, user);
+    }
+
+    /**
      * Gets action.
      *
      * @return value of action java.util.List<com.jp.trc.testing.view.action.UserAction>
@@ -133,20 +147,6 @@ public class SubMenu {
      */
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
-    }
-
-    /**
-     * Constructor for creating a submenu.
-     *
-     * @param user Authorized user for whom the menu is formed.
-     * @param nameMenu The menu item for which you want to create a submenu.
-     */
-    public SubMenu(User user, String nameMenu, UserAction typeSubMenu, List<ItemMenu> subMenuItems) {
-        this.user = user;
-        subMenuName = nameMenu;
-        this.fromItemMenu = typeSubMenu;
-        this.subMenuItems = subMenuItems;
-        amountSubmenuPages = getAmountSubmenuPages(typeSubMenu, user);
     }
 
     /**
@@ -268,7 +268,7 @@ public class SubMenu {
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
-        return object == null ? subMenuItems: (List<ItemMenu>) object;
+        return object == null ? subMenuItems : (List<ItemMenu>) object;
     }
 
     private int getAmountSubmenuPages(UserAction clazz, User user) {
@@ -280,7 +280,7 @@ public class SubMenu {
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
-        return object == null ? 0: (int) object;
+        return object == null ? 0 : (int) object;
     }
 
     /**
@@ -309,7 +309,7 @@ public class SubMenu {
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
-        return object == null ? subMenuItems: (List<ItemMenu>) object;
+        return object == null ? subMenuItems : (List<ItemMenu>) object;
     }
 
     private void initCommands() {
