@@ -5,6 +5,7 @@ import com.jp.trc.testing.view.action.*;
 import com.jp.trc.testing.view.input.ConsoleInput;
 import com.jp.trc.testing.view.input.Input;
 import com.jp.trc.testing.view.input.InputValidator;
+import com.jp.trc.testing.view.menu.command.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -33,7 +34,7 @@ public class SubMenu {
     /**
      * Amount pages.
      */
-    int amountSubmenuPages;
+    private int amountSubmenuPages;
 
     /**
      * Keyboard input.
@@ -71,6 +72,70 @@ public class SubMenu {
     private Comparator comparator = Comparator.naturalOrder();
 
     /**
+     * Command storage.
+     */
+    private HashMap<String, Command> commands = new HashMap<>();
+
+    /**
+     * Menu item.
+     */
+    private String key;
+
+    /**
+     * Gets action.
+     *
+     * @return value of action java.util.List<com.jp.trc.testing.view.action.UserAction>
+     */
+    public List<UserAction> getAction() {
+        return action;
+    }
+
+    /**
+     * Sets value searchPhrase.
+     *
+     * @param searchPhrase value of searchPhrase
+     */
+    public void setSearchPhrase(String searchPhrase) {
+        this.searchPhrase = searchPhrase;
+    }
+
+    /**
+     * Sets value subMenuItems.
+     *
+     * @param subMenuItems value of subMenuItems
+     */
+    public void setSubMenuItems(List<ItemMenu> subMenuItems) {
+        this.subMenuItems = subMenuItems;
+    }
+
+    /**
+     * Sets value amountSubmenuPages.
+     *
+     * @param amountSubmenuPages value of amountSubmenuPages
+     */
+    public void setAmountSubmenuPages(int amountSubmenuPages) {
+        this.amountSubmenuPages = amountSubmenuPages;
+    }
+
+    /**
+     * Sets value comparator.
+     *
+     * @param comparator value of comparator
+     */
+    public void setComparator(Comparator comparator) {
+        this.comparator = comparator;
+    }
+
+    /**
+     * Sets value currentPage.
+     *
+     * @param currentPage value of currentPage
+     */
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    /**
      * Constructor for creating a submenu.
      *
      * @param user Authorized user for whom the menu is formed.
@@ -91,12 +156,13 @@ public class SubMenu {
     public void show(int page) {
         buildSubMenu(page);
 
-        String key = input.askSubMenu(
+        key = input.askSubMenu(
                 "Введите пункт подменю: ",
                 this.action.size(),
                 amountSubmenuPages
         );
 
+        initCommands();
         select(key);
     }
 
@@ -106,25 +172,10 @@ public class SubMenu {
      */
     public void select(String key) {
         System.out.println();
-        if (key.matches("\\d+")) {
-            this.action.get(Integer.parseInt(key)).execute(user, currentPage);
-        } else if (key.matches("^p\\s*\\d+")) {
-            currentPage = Integer.parseInt(key.replaceAll("p", ""));
-            show(currentPage);
-        } else if (key.matches("^s\\s+.+")) {
-            searchPhrase = key.replaceFirst("s\\s+", "");
-            subMenuItems = search(fromItemMenu, user, 1, comparator);
-            int countElements = search(fromItemMenu, user, 0, comparator).size();
-            amountSubmenuPages = countElements % AMOUNT_ELEMENTS_ON_PAGE == 0
-                    ? countElements / AMOUNT_ELEMENTS_ON_PAGE
-                    : (countElements / AMOUNT_ELEMENTS_ON_PAGE) + 1;
-            show(1);
-        } else if (key.matches("\\s*\\+\\s*")) {
-            comparator = Comparator.naturalOrder();
-            show(1);
-        } else if (key.matches("\\s*\\-\\s*")) {
-            comparator = Comparator.reverseOrder();
-            show(1);
+        for (String pattern : commands.keySet()) {
+            if (key.matches(pattern)) {
+                commands.get(pattern).execute();
+            }
         }
         System.out.println();
     }
@@ -232,7 +283,15 @@ public class SubMenu {
         return object == null ? 0: (int) object;
     }
 
-    private List<ItemMenu> search(UserAction clazz, User user, long page,
+    /**
+     * Search by specified parameters and create submenu.
+     * @param clazz From which menu item the submenu was formed.0
+     * @param user Authorized user for whom the menu is formed.
+     * @param page Page number to display.
+     * @param comparator Comparator for sorting.
+     * @return List<ItemMenu> Ready submenu.
+     */
+    public List<ItemMenu> search(UserAction clazz, User user, long page,
                                   Comparator... comparator) {
         Object object = null;
         try {
@@ -251,5 +310,12 @@ public class SubMenu {
             e.printStackTrace();
         }
         return object == null ? subMenuItems: (List<ItemMenu>) object;
+    }
+
+    private void initCommands() {
+        commands.put("\\d+", new Executer(user, this, key, currentPage));
+        commands.put("^p\\s*\\d+", new Paginator(this, key));
+        commands.put("^s\\s+.+", new Searcher(this, key, fromItemMenu, user, comparator));
+        commands.put("(\\s*\\+\\s*)||(\\s*\\-\\s*)", new Order(this, key));
     }
 }
