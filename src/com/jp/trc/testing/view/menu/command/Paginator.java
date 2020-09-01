@@ -33,7 +33,6 @@ public class Paginator implements Command {
      */
     @Override
     public void execute() {
-        System.out.println(key);
         int currentPage = Integer.parseInt(key.replaceAll("p", ""));
         subMenu.setCurrentPage(currentPage);
         subMenu.show(currentPage);

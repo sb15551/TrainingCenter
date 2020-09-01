@@ -43,15 +43,13 @@ public class Searcher implements Command {
      * @param key Menu item.
      * @param fromItemMenu From which menu item the submenu was formed.
      * @param user Authorized user for whom the menu is formed.
-     * @param comparator Comparator for sorting.
      */
     public Searcher(SubMenu subMenu, String key,
-                    UserAction fromItemMenu, User user, Comparator comparator) {
+                    UserAction fromItemMenu, User user) {
         this.subMenu = subMenu;
         this.key = key;
         this.fromItemMenu = fromItemMenu;
         this.user = user;
-        this.comparator = comparator;
     }
 
     /**
@@ -60,8 +58,8 @@ public class Searcher implements Command {
     @Override
     public void execute() {
         subMenu.setSearchPhrase(key.replaceFirst("s\\s+", ""));
-        subMenu.setSubMenuItems(subMenu.search(fromItemMenu, user, 1, comparator));
-        int countElements = subMenu.search(fromItemMenu, user, 0, comparator).size();
+        subMenu.setSubMenuItems(subMenu.search(fromItemMenu, user, 1));
+        int countElements = subMenu.search(fromItemMenu, user, 0).size();
         subMenu.setAmountSubmenuPages(
                 countElements % SubMenu.AMOUNT_ELEMENTS_ON_PAGE == 0
                 ? countElements / SubMenu.AMOUNT_ELEMENTS_ON_PAGE

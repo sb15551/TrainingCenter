@@ -3,6 +3,7 @@ package com.jp.trc.testing.view.action;
 import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.Filter;
 import com.jp.trc.testing.view.menu.ItemMenu;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public interface SubMenuForTeacher {
     public default int getAmountSubmenuPages(User user, int amountElementsOnPage) {
         UserController controller = new UserController();
         int amountElements = controller
-                .getAllStudents(0, amountElementsOnPage, Comparator.naturalOrder())
+                .getAllStudents(new Filter(0, 0, Comparator.naturalOrder()))
                 .size();
         return (amountElements % amountElementsOnPage) == 0
                 ? amountElements / amountElementsOnPage
@@ -36,48 +37,24 @@ public interface SubMenuForTeacher {
     /**
      * Creating submenu.
      * @param user User for which the submenu is being created.
-     * @param page Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator Comparator for sorting.
+     * @param filter Filter for paging, search and ordering.
      * @return List<ItemMenu> Submenu.
      */
-    public default List<ItemMenu> createSubMenu(User user, long page,
-                                                int amountElementsOnPage, Comparator... comparator) {
+    public default List<ItemMenu> createSubMenu(User user, Filter filter) {
         UserController controller = new UserController();
-        List<Test> tmp = new ArrayList(
-                controller.getAllUsers(
-                        page,
-                        amountElementsOnPage,
-                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
-                )
-        );
-        return createItemMenu(
-                tmp,
-                user
-        );
+        List<Test> tmp = new ArrayList(controller.getAllUsers(filter));
+        return createItemMenu(tmp, user);
     }
 
     /**
      * Search by specified parameters and create submenu.
      * @param user User for which the submenu is being created.
-     * @param phrase Search phrase.
-     * @param page Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator Comparator for sorting.
+     * @param filter Filter for paging, search and ordering.
      * @return List<ItemMenu> Ready submenu.
      */
-    public default List<ItemMenu> search(User user, String phrase, long page,
-                                         int amountElementsOnPage, Comparator... comparator) {
+    public default List<ItemMenu> search(User user, Filter filter) {
         UserController controller = new UserController();
-        return createItemMenu(
-                controller.searchUser(
-                        phrase,
-                        page,
-                        amountElementsOnPage,
-                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
-                ),
-                user
-        );
+        return createItemMenu(controller.searchUser(filter), user);
     }
 
     /**

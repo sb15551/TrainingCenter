@@ -6,7 +6,7 @@ import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.Teacher;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.exception.ObjectNotFoundException;
-import com.jp.trc.testing.view.menu.SubMenu;
+import com.jp.trc.testing.view.menu.Filter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,25 +24,22 @@ public class TestController {
     /**
      * Tests compiled by a teacher.
      * @param teacherId Teacher id who compiled tests.
-     * @param page Page number to display.
-     * @param comparator Comparator for sorting.
+     * @param filter Filter for paging, search and ordering.
      * @return Tests compiled by a teacher.
      */
-    public List<Test> getTestsByTeacher(int teacherId, long page,
-                                        int amountElementsOnPage, Comparator comparator) {
+    public List<Test> getTestsByTeacher(int teacherId, Filter filter) {
         List<Test> tests = Repository.getTests().stream()
                 .filter(test -> test.getAuthor().getId() == teacherId)
                 .collect(Collectors.toList());
-        Collections.sort(tests, comparator);
+        Collections.sort(tests, filter.getComparator());
 
-        if (page <= 0) {
+        if (filter.getLimit() == 0) {
             return tests;
         } else {
-            long offset = (page - 1) * amountElementsOnPage;
             return tests.stream()
                     .filter(test -> test.getAuthor().getId() == teacherId)
-                    .skip(offset)
-                    .limit(amountElementsOnPage)
+                    .skip(filter.getOffset())
+                    .limit(filter.getLimit())
                     .collect(Collectors.toList());
         }
     }
@@ -50,12 +47,10 @@ public class TestController {
     /**
      * List of tests available to the user.
      * @param studentId User id for which to get a list of tests.
-     * @param page Page number to display.
-     * @param comparator Comparator for sorting.
+     * @param filter Filter for paging, search and ordering.
      * @return Tests available to user.
      */
-    public List<Test> getTestsForStudent(int studentId, long page,
-                                         int amountElementsOnPage, Comparator comparator) {
+    public List<Test> getTestsForStudent(int studentId, Filter filter) {
         List<Test> tests = new ArrayList<>();
         List<Assignment> assignments = Repository.getAssignments().stream()
                 .filter(test -> test.getStudentId() == studentId)
@@ -68,37 +63,43 @@ public class TestController {
                 }
             }
         }
-        Collections.sort(tests, comparator);
+        Collections.sort(tests, filter.getComparator());
 
-        if (page <= 0) {
+        if (filter.getLimit() == 0) {
             return tests;
         } else {
-            long offset = (page - 1) * amountElementsOnPage;
             return tests.stream()
-                    .skip(offset)
-                    .limit(amountElementsOnPage)
+                    .skip(filter.getOffset())
+                    .limit(filter.getLimit())
                     .collect(Collectors.toList());
         }
     }
 
     /**
+     * Get amount tests for student.
+     * @param studentId User id for which to get a list of tests.
+     * @return amount.
+     */
+    public int getAmountTestsForStudent(int studentId) {
+        return (int) Repository.getAssignments().stream()
+                .filter(test -> test.getStudentId() == studentId)
+                .count();
+    }
+
+    /**
      * Executing search for to the tests.
      * @param user User for which the search is being executed.
-     * @param phrase Search phrase.
-     * @param page Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator Comparator for sorting.
+     * @param filter Filter for paging, search and ordering.
      * @return List<Test> Ready submenu.
      */
-    public List<Test> searchTest(User user, String phrase, long page,
-                                 int amountElementsOnPage, Comparator comparator) {
+    public List<Test> searchTest(User user, Filter filter) {
         List<Test> submenuItems = new ArrayList<>();
         List<Test> tests = new ArrayList<>();
         if (user instanceof Teacher) {
-            tests = getTestsByTeacher(user.getId(), 0, SubMenu.AMOUNT_ELEMENTS_ON_PAGE, comparator);
+            tests = getTestsByTeacher(user.getId(), new Filter(0, 0, Comparator.naturalOrder()));
         }
         if (user instanceof Student) {
-            tests = getTestsForStudent(user.getId(), 0, SubMenu.AMOUNT_ELEMENTS_ON_PAGE, comparator);
+            tests = getTestsForStudent(user.getId(), new Filter(0, 0, Comparator.naturalOrder()));
         }
         for (Test test : tests) {
             StringBuilder text = new StringBuilder();
@@ -109,20 +110,14 @@ public class TestController {
                     text.append(answer.getTitle()).append(" ");
                 }
             }
-            if (text.toString().contains(phrase)) {
+            if (text.toString().contains(filter.getSearchPhrase())) {
                 submenuItems.add(test);
             }
         }
-        if (page <= 0) {
-            return submenuItems.stream()
-                    .collect(Collectors.toList());
-        } else {
-            long offset = (page - 1) * amountElementsOnPage;
-            return submenuItems.stream()
-                    .skip(offset)
-                    .limit(amountElementsOnPage)
-                    .collect(Collectors.toList());
-        }
+        return submenuItems.stream()
+                .skip(filter.getOffset())
+                .limit(filter.getLimit())
+                .collect(Collectors.toList());
     }
 
     /**

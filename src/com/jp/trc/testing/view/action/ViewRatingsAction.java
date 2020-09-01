@@ -3,6 +3,7 @@ package com.jp.trc.testing.view.action;
 import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.Filter;
 import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
@@ -50,7 +51,11 @@ public class ViewRatingsAction implements UserAction, SubMenuForTeacher {
                 user,
                 "ВСЕ СТУДЕНТЫ",
                 this,
-                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+                createSubMenu(user, new Filter(
+                        0,
+                        SubMenu.AMOUNT_ELEMENTS_ON_PAGE,
+                        Comparator.naturalOrder()
+                ))
         );
         subMenu.show(page);
     }
@@ -80,8 +85,7 @@ public class ViewRatingsAction implements UserAction, SubMenuForTeacher {
     public int getAmountSubmenuPages(User user, int amountElementsOnPage) {
         UserController controller = new UserController();
         int amountElements = controller
-                .getGroupStudents(groupId, 0, amountElementsOnPage, Comparator.naturalOrder())
-                .size();
+                .getAmountGroupStudents(groupId);
         return (amountElements % amountElementsOnPage) == 0
                 ? amountElements / amountElementsOnPage
                 : (amountElements / amountElementsOnPage) + 1;
@@ -90,55 +94,31 @@ public class ViewRatingsAction implements UserAction, SubMenuForTeacher {
     /**
      * Creating submenu.
      *
-     * @param user                 User for which the submenu is being created.
-     * @param page                 Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator           Comparator for sorting.
+     * @param user   User for which the submenu is being created.
+     * @param filter Filter for paging, search and ordering.
      * @return List<ItemMenu> Submenu.
      */
     @Override
-    public List<ItemMenu> createSubMenu(User user, long page,
-                                        int amountElementsOnPage, Comparator... comparator) {
+    public List<ItemMenu> createSubMenu(User user, Filter filter) {
         List<Student> tmp = new ArrayList<>(
-                userController.getGroupStudents(
-                        groupId,
-                        page,
-                        amountElementsOnPage,
-                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
-                )
+                userController.getGroupStudents(groupId, filter)
         );
-        return createItemMenu(
-                tmp,
-                user
-        );
+        return createItemMenu(tmp, user);
     }
 
     /**
      * Search by specified parameters and create submenu.
      *
-     * @param user                 User for which the submenu is being created.
-     * @param phrase               Search phrase.
-     * @param page                 Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator           Comparator for sorting.
+     * @param user   User for which the submenu is being created.
+     * @param filter Filter for paging, search and ordering.
      * @return List<ItemMenu> Ready submenu.
      */
     @Override
-    public List<ItemMenu> search(User user, String phrase, long page,
-                                 int amountElementsOnPage, Comparator... comparator) {
+    public List<ItemMenu> search(User user, Filter filter) {
         List<Student> tmp = new ArrayList<>(
-                userController.searchStudentInGroup(
-                        groupId,
-                        phrase,
-                        page,
-                        amountElementsOnPage,
-                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
-                )
+                userController.searchStudentInGroup(groupId, filter)
         );
-        return createItemMenu(
-                tmp,
-                user
-        );
+        return createItemMenu(tmp, user);
     }
 
     /**

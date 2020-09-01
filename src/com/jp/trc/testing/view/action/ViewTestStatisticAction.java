@@ -5,10 +5,12 @@ import com.jp.trc.testing.model.tests.Answer;
 import com.jp.trc.testing.model.tests.Question;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.Filter;
 import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +63,11 @@ public class ViewTestStatisticAction implements UserAction, SubMenuForStudents {
                 user,
                 "ВЫБОР ТЕСТА ДЛЯ ПРОСМОТРА СТАТИСТИКИ",
                 this,
-                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+                createSubMenu(user, new Filter(
+                        0,
+                        SubMenu.AMOUNT_ELEMENTS_ON_PAGE,
+                        Comparator.naturalOrder()
+                ))
         );
         if (testId == 0) {
             subMenu.show(page);

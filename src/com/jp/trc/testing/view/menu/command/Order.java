@@ -36,11 +36,11 @@ public class Order implements Command {
     @Override
     public void execute() {
         if (key.matches("\\s*\\+\\s*")) {
-            subMenu.setComparator(Comparator.naturalOrder());
+            subMenu.getFilter().setComparator(Comparator.naturalOrder());
             subMenu.show(1);
         }
         if (key.matches("\\s*\\-\\s*")) {
-            subMenu.setComparator(Comparator.reverseOrder());
+            subMenu.getFilter().setComparator(Comparator.reverseOrder());
             subMenu.show(1);
         }
     }

@@ -2,6 +2,7 @@ package com.jp.trc.testing.view.action;
 
 import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.Filter;
 import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
@@ -37,9 +38,31 @@ public class ViewListUsersAction implements UserAction, SubMenuForTeacher {
                 user,
                 "СПИСОК ВСЕХ ПОЛЬЗОВАТЕЛЕЙ СИСТЕМЫ",
                 this,
-                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+                createSubMenu(user, new Filter(
+                        0,
+                        SubMenu.AMOUNT_ELEMENTS_ON_PAGE,
+                        Comparator.naturalOrder()
+                ))
         );
         subMenu.show(page);
+    }
+
+    /**
+     * Get amount submenu pages.
+     *
+     * @param user                 User for which the submenu is being created.
+     * @param amountElementsOnPage Amount elements on page.
+     * @return amount submenu pages.
+     */
+    @Override
+    public int getAmountSubmenuPages(User user, int amountElementsOnPage) {
+        UserController controller = new UserController();
+        int amountElements = controller
+                .getAllUsers(new Filter(0, 0, Comparator.naturalOrder()))
+                .size();
+        return (amountElements % amountElementsOnPage) == 0
+                ? amountElements / amountElementsOnPage
+                : (amountElements / amountElementsOnPage) + 1;
     }
 
     /**

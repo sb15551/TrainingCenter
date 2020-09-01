@@ -22,6 +22,11 @@ public class SubMenu {
     public static final int AMOUNT_ELEMENTS_ON_PAGE = 5;
 
     /**
+     * Command storage.
+     */
+    private HashMap<String, Command> commands = new HashMap<>();
+
+    /**
      * From which menu item the submenu was formed.
      */
     private UserAction fromItemMenu;
@@ -67,25 +72,26 @@ public class SubMenu {
     private String searchPhrase = "";
 
     /**
-     * Comparator for sorting.
-     */
-    private Comparator comparator = Comparator.naturalOrder();
-
-    /**
-     * Command storage.
-     */
-    private HashMap<String, Command> commands = new HashMap<>();
-
-    /**
      * Menu item.
      */
     private String key;
+
+    /**
+     * Filter for paging, search and sorting.
+     */
+    private Filter filter = new Filter(
+            (currentPage - 1) > 0 ? (currentPage - 1) * AMOUNT_ELEMENTS_ON_PAGE : 0,
+            AMOUNT_ELEMENTS_ON_PAGE,
+            Comparator.naturalOrder()
+    );
 
     /**
      * Constructor for creating a submenu.
      *
      * @param user Authorized user for whom the menu is formed.
      * @param nameMenu The menu item for which you want to create a submenu.
+     * @param typeSubMenu From which menu item the submenu was formed.
+     * @param subMenuItems List submenu items.
      */
     public SubMenu(User user, String nameMenu, UserAction typeSubMenu, List<ItemMenu> subMenuItems) {
         this.user = user;
@@ -132,21 +138,30 @@ public class SubMenu {
     }
 
     /**
-     * Sets value comparator.
-     *
-     * @param comparator value of comparator
-     */
-    public void setComparator(Comparator comparator) {
-        this.comparator = comparator;
-    }
-
-    /**
      * Sets value currentPage.
      *
      * @param currentPage value of currentPage
      */
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
+    }
+
+    /**
+     * Gets filter.
+     *
+     * @return value of filter com.jp.trc.testing.view.menu.Filter
+     */
+    public Filter getFilter() {
+        return filter;
+    }
+
+    /**
+     * Sets value filter.
+     *
+     * @param filter value of filter
+     */
+    public void setFilter(Filter filter) {
+        this.filter = filter;
     }
 
     /**
@@ -188,8 +203,8 @@ public class SubMenu {
         List<ItemMenu> subMenuItemsOnPage;
 
         subMenuItemsOnPage = searchPhrase.equals("")
-                ? getPageSubMenu(fromItemMenu, user, page, comparator)
-                : search(fromItemMenu, user, page, comparator);
+                ? getPageSubMenu(fromItemMenu, user, page)
+                : search(fromItemMenu, user, page);
 
         action = new ArrayList<>();
         subMenu.add(new ItemMenu(
@@ -251,19 +266,22 @@ public class SubMenu {
         }
     }
 
-    private List<ItemMenu> getPageSubMenu(UserAction clazz, User user,
-                                          long page, Comparator... comparator) {
+    private List<ItemMenu> getPageSubMenu(UserAction clazz, User user, long page) {
         Object object = null;
+        if (page > 0) {
+            filter.setOffset((page - 1) * AMOUNT_ELEMENTS_ON_PAGE);
+            filter.setLimit(AMOUNT_ELEMENTS_ON_PAGE);
+        } else {
+            filter.setOffset(0);
+            filter.setLimit(amountSubmenuPages * AMOUNT_ELEMENTS_ON_PAGE);
+        }
         try {
             object = clazz.getClass()
-                    .getMethod("createSubMenu", User.class, long.class,
-                            int.class, Comparator[].class)
+                    .getMethod("createSubMenu", User.class, Filter.class)
                     .invoke(
                             clazz,
                             user,
-                            page,
-                            AMOUNT_ELEMENTS_ON_PAGE,
-                            comparator.length == 0 ? Comparator.naturalOrder() : comparator
+                            filter
                     );
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
@@ -288,23 +306,25 @@ public class SubMenu {
      * @param clazz From which menu item the submenu was formed.0
      * @param user Authorized user for whom the menu is formed.
      * @param page Page number to display.
-     * @param comparator Comparator for sorting.
      * @return List<ItemMenu> Ready submenu.
      */
-    public List<ItemMenu> search(UserAction clazz, User user, long page,
-                                  Comparator... comparator) {
+    public List<ItemMenu> search(UserAction clazz, User user, long page) {
+        filter.setSearchPhrase(searchPhrase);
+        if (page > 0) {
+            filter.setOffset((page - 1) * AMOUNT_ELEMENTS_ON_PAGE);
+            filter.setLimit(AMOUNT_ELEMENTS_ON_PAGE);
+        } else {
+            filter.setOffset(0);
+            filter.setLimit(amountSubmenuPages * AMOUNT_ELEMENTS_ON_PAGE);
+        }
         Object object = null;
         try {
             object = clazz.getClass()
-                    .getMethod("search", User.class,
-                            String.class, long.class, int.class, Comparator[].class)
+                    .getMethod("search", User.class, Filter.class)
                     .invoke(
                             clazz,
                             user,
-                            searchPhrase,
-                            page,
-                            AMOUNT_ELEMENTS_ON_PAGE,
-                            comparator.length == 0 ? Comparator.naturalOrder() : comparator
+                            filter
                     );
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
@@ -315,7 +335,7 @@ public class SubMenu {
     private void initCommands() {
         commands.put("\\d+", new Executer(user, this, key, currentPage));
         commands.put("^p\\s*\\d+", new Paginator(this, key));
-        commands.put("^s\\s+.+", new Searcher(this, key, fromItemMenu, user, comparator));
+        commands.put("^s\\s+.+", new Searcher(this, key, fromItemMenu, user));
         commands.put("(\\s*\\+\\s*)||(\\s*\\-\\s*)", new Order(this, key));
     }
 }

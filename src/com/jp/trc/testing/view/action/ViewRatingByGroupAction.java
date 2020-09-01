@@ -3,6 +3,7 @@ package com.jp.trc.testing.view.action;
 import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.Filter;
 import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
@@ -59,7 +60,11 @@ public class ViewRatingByGroupAction implements UserAction, SubMenuForTeacher {
                 user,
                 "СТУДЕНЧЕСКИЕ ГРУППЫ",
                 this,
-                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+                createSubMenu(user, new Filter(
+                        0,
+                        SubMenu.AMOUNT_ELEMENTS_ON_PAGE,
+                        Comparator.naturalOrder()
+                ))
         );
         if (groupId == 0) {
             subMenu.show(page);
@@ -69,7 +74,7 @@ public class ViewRatingByGroupAction implements UserAction, SubMenuForTeacher {
                     user,
                     userController.getGroup(groupId).getTitle(),
                     subMenuItems,
-                    subMenuItems.createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+                    subMenuItems.createSubMenu(user, subMenu.getFilter())
             );
             subMenu.show(page);
         }
@@ -85,7 +90,7 @@ public class ViewRatingByGroupAction implements UserAction, SubMenuForTeacher {
     @Override
     public int getAmountSubmenuPages(User user, int amountElementsOnPage) {
         int amountElements = userController
-                .getGroups(0, amountElementsOnPage, Comparator.naturalOrder())
+                .getGroups(new Filter(0, 0, Comparator.naturalOrder()))
                 .size();
         return (amountElements % amountElementsOnPage) == 0
                 ? amountElements / amountElementsOnPage
@@ -95,54 +100,34 @@ public class ViewRatingByGroupAction implements UserAction, SubMenuForTeacher {
     /**
      * Creating submenu.
      *
-     * @param user                 User for which the submenu is being created.
-     * @param page                 Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator           Comparator for sorting.
+     * @param user   User for which the submenu is being created.
+     * @param filter Filter for paging, search and ordering.
      * @return List<ItemMenu> Submenu.
      */
     @Override
-    public List<ItemMenu> createSubMenu(User user, long page,
-                                        int amountElementsOnPage, Comparator... comparator) {
+    public List<ItemMenu> createSubMenu(User user, Filter filter) {
         List<Group> tmp = new ArrayList<>(
                 userController.getGroups(
-                        page,
-                        amountElementsOnPage,
-                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
+                        filter
                 )
         );
-        Collections.sort(tmp, comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]);
-        return createItemMenu(
-                tmp,
-                user
-        );
+        Collections.sort(tmp, filter.getComparator());
+        return createItemMenu(tmp, user);
     }
 
     /**
      * Search by specified parameters and create submenu.
      *
      * @param user                 User for which the submenu is being created.
-     * @param phrase               Search phrase.
-     * @param page                 Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator           Comparator for sorting.
+     * @param filter Filter for paging, search and ordering.
      * @return List<ItemMenu> Ready submenu.
      */
     @Override
-    public List<ItemMenu> search(User user, String phrase, long page,
-                                 int amountElementsOnPage, Comparator... comparator) {
+    public List<ItemMenu> search(User user, Filter filter) {
         List<Group> tmp = new ArrayList<>(
-                userController.searchGroup(
-                        phrase,
-                        page,
-                        amountElementsOnPage,
-                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
-                )
+                userController.searchGroup(filter)
         );
-        return createItemMenu(
-                tmp,
-                user
-        );
+        return createItemMenu(tmp, user);
     }
 
     /**

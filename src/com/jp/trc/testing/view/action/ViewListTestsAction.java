@@ -3,10 +3,12 @@ package com.jp.trc.testing.view.action;
 import com.jp.trc.testing.controller.TestController;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.Filter;
 import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -52,7 +54,11 @@ public class ViewListTestsAction implements UserAction, SubMenuForStudents {
                 user,
                 "ИНФОРМАЦИЯ О ТЕСТАХ",
                 this,
-                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+                createSubMenu(user, new Filter(
+                        0,
+                        SubMenu.AMOUNT_ELEMENTS_ON_PAGE,
+                        Comparator.naturalOrder()
+                ))
         );
         if (testId == 0) {
             subMenu.show(page);

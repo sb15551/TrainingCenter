@@ -5,6 +5,7 @@ import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.menu.Filter;
 import com.jp.trc.testing.view.menu.ItemMenu;
 import com.jp.trc.testing.view.menu.SubMenu;
 
@@ -56,7 +57,11 @@ public class ViewTestsResultAction implements UserAction, SubMenuForTeacher {
                 user,
                 "ИНФОРМАЦИЯ О РЕЗУЛЬТАТАХ СВОИХ ТЕСТОВ",
                 this,
-                createSubMenu(user, 1, SubMenu.AMOUNT_ELEMENTS_ON_PAGE)
+                createSubMenu(user, new Filter(
+                        0,
+                        SubMenu.AMOUNT_ELEMENTS_ON_PAGE,
+                        Comparator.naturalOrder()
+                ))
         );
         if (testId == 0) {
             subMenu.show(page);
@@ -90,7 +95,7 @@ public class ViewTestsResultAction implements UserAction, SubMenuForTeacher {
     public int getAmountSubmenuPages(User user, int amountElementsOnPage) {
         TestController controller = new TestController();
         int amountElements = (int) controller
-                .getTestsByTeacher(user.getId(), 0, amountElementsOnPage, Comparator.naturalOrder())
+                .getTestsByTeacher(user.getId(), new Filter(0, 0, Comparator.naturalOrder()))
                 .size();
         return (amountElements % amountElementsOnPage) == 0
                 ? amountElements / amountElementsOnPage
@@ -100,57 +105,34 @@ public class ViewTestsResultAction implements UserAction, SubMenuForTeacher {
     /**
      * Creating submenu.
      *
-     * @param user                 User for which the submenu is being created.
-     * @param page                 Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator           Comparator for sorting.
+     * @param user   User for which the submenu is being created.
+     * @param filter Filter for paging, search and ordering.
      * @return List<ItemMenu> Submenu.
      */
     @Override
-    public List<ItemMenu> createSubMenu(User user, long page,
-                                        int amountElementsOnPage, Comparator... comparator) {
+    public List<ItemMenu> createSubMenu(User user, Filter filter) {
         TestController controller = new TestController();
         List<Test> tmp = new ArrayList<>(
                 controller.getTestsByTeacher(
                         user.getId(),
-                        page,
-                        amountElementsOnPage,
-                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0])
+                        filter)
         );
-        return createItemMenu(
-                tmp,
-                user
-        );
+        return createItemMenu(tmp, user);
     }
 
     /**
      * Search by specified parameters and create submenu.
      *
-     * @param user                 User for which the submenu is being created.
-     * @param phrase               Search phrase.
-     * @param page                 Page number to display.
-     * @param amountElementsOnPage Amount elements on page.
-     * @param comparator           Comparator for sorting.
+     * @param user   User for which the submenu is being created.
+     * @param filter Filter for paging, search and ordering.
      * @return List<ItemMenu> Ready submenu.
      */
     @Override
-    public List<ItemMenu> search(User user, String phrase, long page,
-                                 int amountElementsOnPage, Comparator... comparator) {
+    public List<ItemMenu> search(User user, Filter filter) {
         TestController controller = new TestController();
-        List<Test> tmp = new ArrayList<>(
-                controller.searchTest(
-                        user,
-                        phrase,
-                        page,
-                        amountElementsOnPage,
-                        comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]
-                )
-        );
-        Collections.sort(tmp, comparator.length == 0 ? Comparator.naturalOrder() : comparator[0]);
-        return createItemMenu(
-                tmp,
-                user
-        );
+        List<Test> tmp = new ArrayList<>(controller.searchTest(user, filter));
+        Collections.sort(tmp, filter.getComparator());
+        return createItemMenu(tmp, user);
     }
 
     /**
