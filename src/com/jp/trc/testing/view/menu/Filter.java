@@ -100,7 +100,7 @@ public class Filter {
      *
      * @return value of comparator java.util.Comparator
      */
-    public Comparator getComparator() {
+    public <T extends Comparable<? super T>> Comparator<? super T> getComparator() {
         return comparator;
     }
 

@@ -75,8 +75,8 @@ public class ConsoleInput implements Input {
             }
         } else if (item.matches("^s\\s+.+")) {
             return item;
-        } else if (item.matches("\\s*\\+\\s*") || item.matches("\\s*\\-\\s*")) {
-            return item;
+        } else if (item.matches("\\s*\\+\\s*.+") || item.matches("\\s*\\-\\s*.+")) {
+            return item.replaceAll(" ", "").trim();
         } else {
             throw new NumberFormatException("Введите корректные данные");
         }

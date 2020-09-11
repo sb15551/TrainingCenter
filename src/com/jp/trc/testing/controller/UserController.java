@@ -211,6 +211,7 @@ public class UserController {
      */
     public List<Student> getAllStudents(Filter filter) {
         List<User> tmp = getAllUsers(new Filter(0, 0, Comparator.naturalOrder()));
+        Collections.sort(tmp, filter.getComparator());
         if (filter.getLimit() == 0) {
             return new ArrayList(
                     tmp.stream()

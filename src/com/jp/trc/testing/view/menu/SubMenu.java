@@ -2,6 +2,7 @@ package com.jp.trc.testing.view.menu;
 
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.action.*;
+import com.jp.trc.testing.view.exception.MenuOutException;
 import com.jp.trc.testing.view.input.ConsoleInput;
 import com.jp.trc.testing.view.input.Input;
 import com.jp.trc.testing.view.input.InputValidator;
@@ -165,6 +166,15 @@ public class SubMenu {
     }
 
     /**
+     * Gets user.
+     *
+     * @return value of user com.jp.trc.testing.model.users.User
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
      * Displays a submenu.
      * @param page Page number to display. If the "page" array is empty, the first page is displayed.
      */
@@ -189,7 +199,11 @@ public class SubMenu {
         System.out.println();
         for (String pattern : commands.keySet()) {
             if (key.matches(pattern)) {
-                commands.get(pattern).execute();
+                try {
+                    commands.get(pattern).execute();
+                } catch (MenuOutException moe) {
+                    System.out.println(moe.getMessage());
+                }
             }
         }
         System.out.println();
@@ -259,10 +273,8 @@ public class SubMenu {
                     pages.toString()
                     );
 
-            System.out.println(
-                    "\ts. (Чтобы выполнить поиск введите \"s \" и искомую фразу)\n"
-                    + "\tВведите \"+\" или \"-\" чтобы осортировать в алфавитном порядке"
-            );
+            System.out.println("\ts. (Чтобы выполнить поиск введите \"s \" и искомую фразу)");
+            Order.printMenuOrder(user);
         }
     }
 
@@ -336,6 +348,6 @@ public class SubMenu {
         commands.put("\\d+", new Executer(user, this, key, currentPage));
         commands.put("^p\\s*\\d+", new Paginator(this, key));
         commands.put("^s\\s+.+", new Searcher(this, key, fromItemMenu, user));
-        commands.put("(\\s*\\+\\s*)||(\\s*\\-\\s*)", new Order(this, key));
+        commands.put("(\\s*\\+\\s*.+)||(\\s*\\-\\s*.+)", new Order(this, key));
     }
 }
