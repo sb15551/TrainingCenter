@@ -12,10 +12,7 @@ import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 import com.jp.trc.testing.view.menu.Filter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +24,22 @@ public class TestController {
 
     private TestDAO testDAO = new CSVTestDAO();
     private UserDAO userDAO = new CSVUserDAO();
+
+    /**
+     * Get list all tests.
+     * @return List<Test> all tests.
+     */
+    public List<Test> getTests() {
+        return testDAO.getTests();
+    }
+
+    /**
+     * Get all answers to all students' questions.
+     * @return Set<AnswerToQuestion> all answers to all students' questions.
+     */
+    public Set<AnswerToQuestion> getAnswerToQuestions(){
+        return testDAO.getAnswerToQuestions();
+    }
 
     /**
      * Tests compiled by a teacher.

@@ -1,5 +1,6 @@
 package com.jp.trc.testing.model.users;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Objects;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public abstract class User implements Comparable<User> {
+public abstract class User implements Comparable<User>, Serializable {
 
     /**
      * User id.

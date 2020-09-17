@@ -99,6 +99,12 @@ public class Menu {
                 "Admin",
                 new ViewListUsersAction()
         ));
+
+        menuItems.add(new ItemMenu(
+                "Экспортировать всю базу данных в файл",
+                "Admin",
+                new DataExportAction()
+        ));
     }
 
     /**

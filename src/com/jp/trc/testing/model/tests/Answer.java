@@ -1,12 +1,13 @@
 package com.jp.trc.testing.model.tests;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 29.05.2020 12:23
  */
-public class Answer {
+public class Answer implements Serializable {
 
     /**
      * Answer id.

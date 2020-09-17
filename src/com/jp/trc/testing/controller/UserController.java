@@ -42,6 +42,14 @@ public class UserController {
     }
 
     /**
+     * Get all assignments.
+     * @return List<Assignment> all tests assigned to students.
+     */
+    public List<Assignment> getAssignments() {
+        return userDAO.getAssignments();
+    }
+
+    /**
      * Get user by login.
      * @param login User login.
      * @return user by login.

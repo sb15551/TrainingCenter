@@ -2,12 +2,14 @@ package com.jp.trc.testing.model.tests;
 
 import com.jp.trc.testing.model.users.Teacher;
 
+import java.io.Serializable;
+
 /**
  * Student Test.
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 18.05.2020 10:05
  */
-public class Test implements Comparable<Test> {
+public class Test implements Comparable<Test>, Serializable {
 
     /**
      * Test id.

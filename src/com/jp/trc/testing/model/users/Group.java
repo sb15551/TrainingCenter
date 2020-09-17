@@ -1,11 +1,13 @@
 package com.jp.trc.testing.model.users;
 
+import java.io.Serializable;
+
 /**
  * Group students.
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 03.06.2020 8:28
  */
-public class Group implements Comparable<Group> {
+public class Group implements Comparable<Group>, Serializable {
 
     /**
      * Group id.

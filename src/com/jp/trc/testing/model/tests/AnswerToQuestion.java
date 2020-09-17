@@ -1,5 +1,6 @@
 package com.jp.trc.testing.model.tests;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Objects;
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 31.05.2020 11:03
  */
-public class AnswerToQuestion {
+public class AnswerToQuestion implements Serializable {
 
     /**
      * Student id.
