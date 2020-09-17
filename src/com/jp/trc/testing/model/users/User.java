@@ -60,6 +60,15 @@ public abstract class User implements Comparable<User> {
     }
 
     /**
+     * Sets value id.
+     *
+     * @param id value of id
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * Gets name.
      *
      * @return value of name java.lang.String

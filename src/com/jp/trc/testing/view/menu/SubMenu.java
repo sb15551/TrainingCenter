@@ -103,6 +103,15 @@ public class SubMenu {
     }
 
     /**
+     * Gets currentPage.
+     *
+     * @return value of currentPage int
+     */
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    /**
      * Gets action.
      *
      * @return value of action java.util.List<com.jp.trc.testing.view.action.UserAction>

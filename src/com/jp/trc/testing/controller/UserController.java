@@ -1,6 +1,7 @@
 package com.jp.trc.testing.controller;
 
-import com.jp.trc.testing.model.Repository;
+import com.jp.trc.testing.dao.CSVUserDAO;
+import com.jp.trc.testing.dao.UserDAO;
 import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.users.Group;
 import com.jp.trc.testing.model.users.Student;
@@ -10,10 +11,7 @@ import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 import com.jp.trc.testing.view.exception.VerifiesPasswordException;
 import com.jp.trc.testing.view.menu.Filter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -23,13 +21,15 @@ import java.util.stream.Collectors;
  */
 public class UserController {
 
+    private UserDAO userDAO = new CSVUserDAO();
+
     /**
      * List of all users.
      * @param filter Filter for paging, search and ordering.
      * @return ist of all users.
      */
     public List<User> getAllUsers(Filter filter) {
-        List<User> tmp = new ArrayList<>(Repository.getUsers().values());
+        List<User> tmp = new ArrayList<>(userDAO.getUsers().values());
         Collections.sort(tmp, filter.getComparator());
         if (filter.getLimit() == 0) {
             return tmp;
@@ -48,10 +48,11 @@ public class UserController {
      * @throws ObjectNotFoundException Exception is thrown if sought-for user not found.
      */
     public User getUser(String login) throws ObjectNotFoundException {
-        if (!Repository.getUsers().containsKey(login)) {
+        Map<String, User> users = userDAO.getUsers();
+        if (!users.containsKey(login)) {
             throw new ObjectNotFoundException("Such user not found!!!");
         }
-        return Repository.getUsers().get(login);
+        return users.get(login);
     }
 
     /**
@@ -61,17 +62,12 @@ public class UserController {
      * @throws ObjectNotFoundException Exception is thrown if sought-for user not found.
      */
     public User getUser(int userId) throws ObjectNotFoundException {
-        User searchedUser = null;
-        for (User user : Repository.getUsers().values()) {
-            if (user.getId() == userId) {
-                searchedUser = user;
-            }
+        try {
+            return userDAO.getUser(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (searchedUser == null) {
-            throw new ObjectNotFoundException("Such user not found!!!");
-        } else {
-            return searchedUser;
-        }
+        throw new ObjectNotFoundException("Such user not found!!!");
     }
 
     /**
@@ -81,11 +77,11 @@ public class UserController {
      * @throws LoginExistsException
      */
     public boolean existsLogin(String login) throws LoginExistsException {
-        if (!Repository.getUsers().containsKey(login)) {
+        if (!userDAO.userExist(login)) {
             throw new LoginExistsException("Такого логина не существует!\n"
                     + "Введите заново: ");
         }
-        return Repository.getUsers().containsKey(login);
+        return true;
     }
 
     /**
@@ -97,26 +93,27 @@ public class UserController {
      */
     public boolean verifiesPassword(String login, String password)
             throws VerifiesPasswordException {
-        if (!Repository.getUsers().get(login).getPassword().equals(password)) {
+        if (!userDAO.getUsers().get(login).getPassword().equals(password)) {
             throw new VerifiesPasswordException("Пароль не верный!!!\n"
                     + "Введите еще раз: ");
         }
-        return Repository.getUsers().get(login).getPassword().equals(password);
+        return userDAO.getUsers().get(login).getPassword().equals(password);
     }
 
     /**
      * Calculates the student student rating.
      * @param studentId Id of the student for which the rating is calculated.
      */
-    public void calculateStudentRating(int studentId) {
-        List<Assignment> testsStudent = Repository.getAssignments().stream()
+    public void calculateStudentRating(int studentId) throws Exception {
+        List<Assignment> testsStudent = userDAO.getAssignments().stream()
                 .filter(assignment -> assignment.getStudentId() == studentId
                         && assignment.getResult() != null)
                 .collect(Collectors.toList());
         double rating = testsStudent.stream().mapToInt(Assignment::getResult).sum();
         rating /= testsStudent.size();
-        Student student = (Student) Repository.getUser(studentId);
+        Student student = (Student) userDAO.getUser(studentId);
         student.setRating(rating);
+        userDAO.updateUser(student);
     }
 
     /**
@@ -125,16 +122,7 @@ public class UserController {
      * @return List<Group> list groups.
      */
     public List<Group> getGroups(Filter filter) {
-        List<Group> group = Repository.getGroups();
-        Collections.sort(group, filter.getComparator());
-        if (filter.getLimit() == 0) {
-            return group;
-        } else {
-            return group.stream()
-                    .skip(filter.getOffset())
-                    .limit(filter.getLimit())
-                    .collect(Collectors.toList());
-        }
+        return userDAO.getGroups(filter);
     }
 
     /**
@@ -143,13 +131,7 @@ public class UserController {
      * @return
      */
     public Group getGroup(int groupId) {
-        Group group = Repository.getGroup(groupId);
-        if (group == null) {
-            throw new ObjectNotFoundException("Such group not found!!!");
-        } else {
-            return group;
-        }
-
+        return userDAO.getGroup(groupId);
     }
 
     /**
@@ -174,9 +156,7 @@ public class UserController {
             Collections.sort(tmp, filter.getComparator());
             return tmp;
         }
-        if (Repository.getGroup(groupId) == null) {
-            throw new ObjectNotFoundException("Such group not found!!!");
-        }
+
         List<Student> students = new ArrayList<>();
         tmp = getAllStudents(new Filter(0, 0, filter.getComparator()));
         Collections.sort(tmp, filter.getComparator());

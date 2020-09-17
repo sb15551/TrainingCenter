@@ -1,7 +1,9 @@
 package com.jp.trc.testing.view;
 
 import com.jp.trc.testing.model.users.User;
+import com.jp.trc.testing.view.input.ConsoleInput;
 import com.jp.trc.testing.view.input.Input;
+import com.jp.trc.testing.view.input.InputValidator;
 import com.jp.trc.testing.view.menu.Menu;
 
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class UILauncher {
         }
     }
 
-//    public static void main(String[] args) {
-//        new StartUI(new ValidateInput(new ConsoleInput()), new TrainingCenter()).init();
-//    }
+    public static void main(String[] args) {
+        new UILauncher(new InputValidator(new ConsoleInput())).init();
+    }
 }

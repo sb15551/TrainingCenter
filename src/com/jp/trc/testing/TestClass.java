@@ -108,7 +108,11 @@ public class TestClass {
                             null
                     );
                     Repository.addAssignment(assignment);
-                    userController.calculateStudentRating(user.getId()); // Calculating student rating
+                    try {
+                        userController.calculateStudentRating(user.getId()); // Calculating student rating
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

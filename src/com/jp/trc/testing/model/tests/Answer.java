@@ -1,5 +1,7 @@
 package com.jp.trc.testing.model.tests;
 
+import java.util.Objects;
+
 /**
  * @author Surkov Aleksey (stibium128@gmail.com)
  * @date 29.05.2020 12:23
@@ -110,5 +112,27 @@ public class Answer {
      */
     public void setCorrect(boolean correct) {
         this.correct = correct;
+    }
+
+    /**
+     * Compared answer by id.
+     * @param o answer to compare.
+     * @return
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Answer answer = (Answer) o;
+        return id == answer.id;
+    }
+
+    /**
+     * Returns a hash code value for the object.
+     * @return a hash code value for this object.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

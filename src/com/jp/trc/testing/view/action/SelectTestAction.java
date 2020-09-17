@@ -3,6 +3,7 @@ package com.jp.trc.testing.view.action;
 import com.jp.trc.testing.controller.TestController;
 import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.tests.Answer;
+import com.jp.trc.testing.model.tests.Assignment;
 import com.jp.trc.testing.model.tests.Question;
 import com.jp.trc.testing.model.tests.Test;
 import com.jp.trc.testing.model.users.User;
@@ -124,8 +125,12 @@ public class SelectTestAction implements UserAction, SubMenuForStudents {
         System.out.println("\nТест завершен!");
         int resultTest = Math.round(testController.calculateTestResult(user.getId(), testId) / 10);
         System.out.printf("Результат теста: %s", resultTest);
-        testController.getAssignment(user.getId(), testId).setResult(resultTest);
-        userController.calculateStudentRating(user.getId());
+        testController.updateAssignment(new Assignment(user.getId(), testId, resultTest));
+        try {
+            userController.calculateStudentRating(user.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

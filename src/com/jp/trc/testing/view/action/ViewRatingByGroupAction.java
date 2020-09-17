@@ -76,7 +76,7 @@ public class ViewRatingByGroupAction implements UserAction, SubMenuForTeacher {
                     subMenuItems,
                     subMenuItems.createSubMenu(user, subMenu.getFilter())
             );
-            subMenu.show(page);
+            subMenu.show(subMenu.getCurrentPage());
         }
     }
 

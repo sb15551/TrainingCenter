@@ -1,5 +1,9 @@
 package com.jp.trc.testing.controller;
 
+import com.jp.trc.testing.dao.CSVTestDAO;
+import com.jp.trc.testing.dao.CSVUserDAO;
+import com.jp.trc.testing.dao.TestDAO;
+import com.jp.trc.testing.dao.UserDAO;
 import com.jp.trc.testing.model.Repository;
 import com.jp.trc.testing.model.tests.*;
 import com.jp.trc.testing.model.users.Student;
@@ -21,6 +25,9 @@ import java.util.stream.Collectors;
  */
 public class TestController {
 
+    private TestDAO testDAO = new CSVTestDAO();
+    private UserDAO userDAO = new CSVUserDAO();
+
     /**
      * Tests compiled by a teacher.
      * @param teacherId Teacher id who compiled tests.
@@ -28,7 +35,7 @@ public class TestController {
      * @return Tests compiled by a teacher.
      */
     public List<Test> getTestsByTeacher(int teacherId, Filter filter) {
-        List<Test> tests = Repository.getTests().stream()
+        List<Test> tests = testDAO.getTests().stream()
                 .filter(test -> test.getAuthor().getId() == teacherId)
                 .collect(Collectors.toList());
         Collections.sort(tests, filter.getComparator());
@@ -52,12 +59,12 @@ public class TestController {
      */
     public List<Test> getTestsForStudent(int studentId, Filter filter) {
         List<Test> tests = new ArrayList<>();
-        List<Assignment> assignments = Repository.getAssignments().stream()
+        List<Assignment> assignments = userDAO.getAssignments().stream()
                 .filter(test -> test.getStudentId() == studentId)
                 .collect(Collectors.toList());
 
         for (Assignment assignment : assignments) {
-            for (Test test : Repository.getTests()) {
+            for (Test test : testDAO.getTests()) {
                 if (assignment.getTestId() == test.getId()) {
                     tests.add(test);
                 }
@@ -81,7 +88,7 @@ public class TestController {
      * @return amount.
      */
     public int getAmountTestsForStudent(int studentId) {
-        return (int) Repository.getAssignments().stream()
+        return (int) userDAO.getAssignments().stream()
                 .filter(test -> test.getStudentId() == studentId)
                 .count();
     }
@@ -127,12 +134,7 @@ public class TestController {
      * @throws ObjectNotFoundException Exception is thrown if sought-for test not found.
      */
     public Test getTest(int testId) throws ObjectNotFoundException {
-        for (Test test : Repository.getTests()) {
-            if (test.getId() == testId) {
-                return test;
-            }
-        }
-        throw new ObjectNotFoundException("Such test not found!!!");
+        return testDAO.getTest(testId);
     }
 
     /**
@@ -141,7 +143,7 @@ public class TestController {
      * @return question quentity in test.
      */
     public int getQuestionQuentityInTest(int testId) {
-        return Repository.getQuestions().stream()
+        return testDAO.getQuestions().stream()
                 .filter(question -> question.getTestId() == testId)
                 .collect(Collectors.toList())
                 .size();
@@ -153,7 +155,7 @@ public class TestController {
      * @return questions in test.
      */
     public List<Question> getTestQuestions(int testId) {
-        return Repository.getQuestions().stream()
+        return testDAO.getQuestions().stream()
                 .filter(question -> question.getTestId() == testId)
                 .collect(Collectors.toList());
     }
@@ -164,7 +166,7 @@ public class TestController {
      * @return list answer variants.
      */
     public List<Answer> getAnswerVariants(int questionId) {
-        return Repository.getAnswers().stream()
+        return testDAO.getAnswers().stream()
                 .filter(answer -> answer.getQuestionId() == questionId)
                 .collect(Collectors.toList());
     }
@@ -176,7 +178,7 @@ public class TestController {
      * @return student-test attitude.
      */
     public Assignment getAssignment(int studentId, int testId) {
-        return Repository.getAssignment(studentId, testId);
+        return testDAO.getAssignment(studentId, testId);
     }
 
     /**
@@ -186,12 +188,7 @@ public class TestController {
      * @throws ObjectNotFoundException Exception is thrown if sought-for answer not found.
      */
     public Answer getAnswer(int answerId) throws ObjectNotFoundException {
-        for (Answer answer : Repository.getAnswers()) {
-            if (answer.getId() == answerId) {
-                return answer;
-            }
-        }
-        throw new ObjectNotFoundException("Such answer not found!!!");
+        return testDAO.getAnswer(answerId);
     }
 
     /**
@@ -201,7 +198,7 @@ public class TestController {
      */
     public List<Assignment> getResultTests(int testId) {
         List<Assignment> assignments = new ArrayList<>();
-        for (Assignment assignment : Repository.getAssignments()) {
+        for (Assignment assignment : userDAO.getAssignments()) {
             if (assignment.getTestId() == testId) {
                 assignments.add(assignment);
             }
@@ -216,7 +213,7 @@ public class TestController {
      * @return true if the response was successfully added.
      */
     public boolean addAnswerToQuestion(int userId, int answerId) {
-        return  Repository.addAnswerToQuestion(
+        return  testDAO.addAnswerToQuestion(
                 new AnswerToQuestion(userId, answerId)
         );
     }
@@ -230,7 +227,7 @@ public class TestController {
     public List<Answer> getAnswersToQuestion(int userId, int questionId) {
         List<Answer> answersToTest = getAnswerVariants(questionId);
         List<Answer> studentAnswers = new ArrayList<>();
-        Repository.getAnswerToQuestions().stream()
+        testDAO.getAnswerToQuestions().stream()
                 .filter(answerToQuestion -> answerToQuestion.getStudentId() == userId)
                 .filter(
                         answerToQuestion -> answersToTest
@@ -260,7 +257,7 @@ public class TestController {
      */
     public List<Answer> getCorrectAnswersStudent(int studentId, int questionId) {
         List<Answer> correctAnswersStudent = new ArrayList<>();
-        Repository.getAnswerToQuestions().stream()
+        testDAO.getAnswerToQuestions().stream()
                 .filter(answerToQuestion -> answerToQuestion.getStudentId() == studentId)
                 .filter(answerToQuestion -> getAnswer(answerToQuestion.getAnswerId()).isCorrect())
                 .filter(
@@ -295,7 +292,7 @@ public class TestController {
      */
     public List<Answer> getIncorrectAnswersStudent(int studentId, int questionId) {
         List<Answer> incorrectAnswersStudent = new ArrayList<>();
-        Repository.getAnswerToQuestions().stream()
+        testDAO.getAnswerToQuestions().stream()
                 .filter(answerToQuestion -> answerToQuestion.getStudentId() == studentId)
                 .filter(answerToQuestion -> !getAnswer(answerToQuestion.getAnswerId()).isCorrect())
                 .filter(
@@ -353,9 +350,15 @@ public class TestController {
      * @param questionId Question id answers to be deleted.
      */
     public void clearAnswerToQuestion(int studentId, int questionId) {
-        Repository.getAnswerToQuestions().removeIf(
-                answerToQuestion -> answerToQuestion.getStudentId() == studentId
-                && getAnswer(answerToQuestion.getAnswerId()).getQuestionId() == questionId
-        );
+        testDAO.clearAnswerToQuestion(studentId, questionId);
+    }
+
+    /**
+     * Update test results record.
+     *
+     * @param assignment
+     */
+    public void updateAssignment(Assignment assignment) {
+        testDAO.updateAssignment(assignment);
     }
 }
