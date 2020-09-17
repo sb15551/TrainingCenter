@@ -256,4 +256,11 @@ public class UserController {
                 .limit(filter.getLimit())
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Removes all data.
+     */
+    public void deleteAllData() {
+        userDAO.deleteAllData();
+    }
 }

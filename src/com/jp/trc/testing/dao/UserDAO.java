@@ -70,14 +70,14 @@ public interface UserDAO {
     public Map<String, User> getUsers();
 
     /**
-     * Deleting all users.
-     */
-    public void deleteUsers();
-
-    /**
      * Does such a user exist in the database.
      * @param login Login to check.
      * @return true if login is finded.
      */
     public boolean userExist(String login);
+
+    /**
+     * Removes all data.
+     */
+    public void deleteAllData();
 }

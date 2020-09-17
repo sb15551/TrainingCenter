@@ -195,6 +195,7 @@ public class CSVUserDAO implements UserDAO {
                 lineUser = reader.readLine();
             }
             reader.close();
+            fr.close();
 
             file.delete();
             tempFile.renameTo(file);
@@ -311,6 +312,8 @@ public class CSVUserDAO implements UserDAO {
                 }
                 lineUser = reader.readLine();
             }
+            reader.close();
+            fr.close();
         } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -320,30 +323,6 @@ public class CSVUserDAO implements UserDAO {
         }
 
         return users;
-    }
-
-    /**
-     * Deleting all users.
-     */
-    @Override
-    public void deleteUsers() {
-        try {
-            FileInputStream stream = new FileInputStream ("resources/temp.csv");
-            InputStreamReader isr = new InputStreamReader (stream);
-            BufferedReader reader = new BufferedReader(isr);
-            String lineUser = reader.readLine();
-            clearFile(fileUsers);
-            writeStringToFile(fileUsers, "id;name;login;password;age;groupId;type");
-            while (lineUser != null) {
-                if (lineUser.split(";")[6].equals("Admin")) {
-                    writeStringToFile(fileUsers, lineUser);
-                }
-                lineUser = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -364,10 +343,72 @@ public class CSVUserDAO implements UserDAO {
                 lineUser = reader.readLine();
             }
             reader.close();
+            isr.close();
+            stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Removes all data.
+     */
+    @Override
+    public void deleteAllData() {
+        try {
+            clearFile(fileGroups);
+            writeStringToFile(fileGroups, "id;title");
+
+            clearFile(fileAssignments);
+            writeStringToFile(fileAssignments, "studentId;testId;result");
+
+            clearFile(CSVFiles.CSV_TESTS);
+            writeStringToFile(CSVFiles.CSV_TESTS, "id;title;teacherId;passingScore");
+
+            clearFile(CSVFiles.CSV_QUESTIONS);
+            writeStringToFile(CSVFiles.CSV_QUESTIONS, "id;testId;query");
+
+            clearFile(CSVFiles.CSV_ANSWERS);
+            writeStringToFile(CSVFiles.CSV_ANSWERS, "id;questionId;title;correct");
+
+            clearFile(CSVFiles.CSV_ANSWER_TO_QUESTIONS);
+            writeStringToFile(CSVFiles.CSV_ANSWER_TO_QUESTIONS, "studentId;answerId");
+
+            deleteUsers();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deleting all users.
+     */
+    private void deleteUsers() {
+        try {
+            String tempFilePath = "resources/.temp.csv";
+            File tempFile = new File(tempFilePath);
+            tempFile.createNewFile();
+
+            File file = new File(fileUsers);
+            FileReader fr = new FileReader(file);
+            BufferedReader reader = new BufferedReader(fr);
+            String lineUser = reader.readLine();
+            writeStringToFile(tempFilePath, "id;name;login;password;age;groupId;rating;type");
+            while (lineUser != null) {
+                if (lineUser.split(";")[7].equals("Admin")) {
+                    writeStringToFile(tempFilePath, "\n" + lineUser);
+                }
+                lineUser = reader.readLine();
+            }
+            reader.close();
+            fr.close();
+
+            file.delete();
+            tempFile.renameTo(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<String> readFile(String filePath) {
@@ -382,6 +423,8 @@ public class CSVUserDAO implements UserDAO {
                 lineUser = reader.readLine();
             }
             reader.close();
+            isr.close();
+            stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -400,10 +443,13 @@ public class CSVUserDAO implements UserDAO {
     }
 
     private static void writeStringToFile(String filePath, String line) throws IOException {
-        OutputStreamWriter file = new OutputStreamWriter(new FileOutputStream(filePath, true));
+        FileOutputStream fos = new FileOutputStream(filePath, true);
+        OutputStreamWriter file = new OutputStreamWriter(fos);
         file.write(line);
         file.flush();
         file.close();
+        fos.flush();
+        fos.close();
     }
 
     private static void writeObjectToFile(String filePath, User user) throws IOException {

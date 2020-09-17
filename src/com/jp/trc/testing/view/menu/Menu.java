@@ -105,6 +105,12 @@ public class Menu {
                 "Admin",
                 new DataExportAction()
         ));
+
+        menuItems.add(new ItemMenu(
+                "Очистить базу данных",
+                "Admin",
+                new ClearStorageAction()
+        ));
     }
 
     /**
