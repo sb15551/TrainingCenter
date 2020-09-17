@@ -73,8 +73,8 @@ public class CSVUserDAO implements UserDAO {
     public User getUser(int userId) {
         String line = "";
         try {
-            FileInputStream stream = new FileInputStream (fileUsers);
-            InputStreamReader isr = new InputStreamReader (stream);
+            FileInputStream stream = new FileInputStream(fileUsers);
+            InputStreamReader isr = new InputStreamReader(stream);
             BufferedReader reader = new BufferedReader(isr);
             String lineUser = reader.readLine();
             while (lineUser != null) {
@@ -332,8 +332,8 @@ public class CSVUserDAO implements UserDAO {
      */
     public boolean userExist(String login) {
         try {
-            FileInputStream stream = new FileInputStream (fileUsers);
-            InputStreamReader isr = new InputStreamReader (stream);
+            FileInputStream stream = new FileInputStream(fileUsers);
+            InputStreamReader isr = new InputStreamReader(stream);
             BufferedReader reader = new BufferedReader(isr);
             String lineUser = reader.readLine();
             while (lineUser != null) {
@@ -414,8 +414,8 @@ public class CSVUserDAO implements UserDAO {
     private List<String> readFile(String filePath) {
         List<String> lines = new ArrayList<>();
         try {
-            FileInputStream stream = new FileInputStream (filePath);
-            InputStreamReader isr = new InputStreamReader (stream, "UTF8");
+            FileInputStream stream = new FileInputStream(filePath);
+            InputStreamReader isr = new InputStreamReader(stream, "UTF8");
             BufferedReader reader = new BufferedReader(isr);
             String lineUser = reader.readLine();
             while (lineUser != null) {
@@ -459,8 +459,9 @@ public class CSVUserDAO implements UserDAO {
         file.close();
     }
 
-    private static <T> T create(Class<T> clazz, int id, String name, String login,
-                                                String password, int age) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    private static <T> T create(Class<T> clazz, int id, String name, String login, String password, int age)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
+            InstantiationException {
         T result = clazz.getConstructor(
                 int.class,
                 String.class,

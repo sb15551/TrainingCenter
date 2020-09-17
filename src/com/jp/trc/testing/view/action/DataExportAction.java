@@ -4,7 +4,6 @@ import com.jp.trc.testing.controller.TestController;
 import com.jp.trc.testing.controller.UserController;
 import com.jp.trc.testing.model.tests.*;
 import com.jp.trc.testing.model.users.Group;
-import com.jp.trc.testing.model.users.Student;
 import com.jp.trc.testing.model.users.User;
 import com.jp.trc.testing.view.exception.ObjectNotFoundException;
 import com.jp.trc.testing.view.menu.Filter;
@@ -41,7 +40,6 @@ public class DataExportAction implements UserAction {
             System.out.println(onfe.getMessage());
             nameFileForExport = enterNameFile();
         }
-
 
         File fileForExport = new File("resources/" + nameFileForExport + ".ser");
 

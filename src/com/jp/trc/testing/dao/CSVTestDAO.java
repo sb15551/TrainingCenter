@@ -161,8 +161,8 @@ public class CSVTestDAO implements TestDAO {
     @Override
     public Test getTest(int testId) {
         try {
-            FileInputStream stream = new FileInputStream (fileTests);
-            InputStreamReader isr = new InputStreamReader (stream, "UTF8");
+            FileInputStream stream = new FileInputStream(fileTests);
+            InputStreamReader isr = new InputStreamReader(stream, "UTF8");
             BufferedReader reader = new BufferedReader(isr);
             String line = reader.readLine();
             while (line != null) {

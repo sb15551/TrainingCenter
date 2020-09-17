@@ -37,7 +37,7 @@ public class TestController {
      * Get all answers to all students' questions.
      * @return Set<AnswerToQuestion> all answers to all students' questions.
      */
-    public Set<AnswerToQuestion> getAnswerToQuestions(){
+    public Set<AnswerToQuestion> getAnswerToQuestions() {
         return testDAO.getAnswerToQuestions();
     }
 
